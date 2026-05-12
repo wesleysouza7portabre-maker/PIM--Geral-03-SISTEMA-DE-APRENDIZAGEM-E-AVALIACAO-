@@ -4,13 +4,13 @@
 
 Plataforma web de avaliação e apoio à aprendizagem desenvolvida como projeto acadêmico para o **PIM III - Projeto Integrado Multidisciplinar** do curso de **Análise e Desenvolvimento de Sistemas - UNIP**.
 
-A TechVagas foi criada como uma solução digital voltada ao aprendizado em tecnologia, reunindo cursos, avaliações, desempenho e organização acadêmica em um único ambiente.
+A  EDUCA TECH_SAAI foi criada como uma solução digital voltada ao aprendizado em tecnologia, reunindo cursos, avaliações, desempenho e organização acadêmica em um único ambiente.
 
 ---
 
 ## 1. Sobre o Projeto
 
-A proposta da TechVagas é oferecer uma experiência moderna de ensino digital, permitindo que estudantes acompanhem sua evolução e desenvolvam novas competências por meio de atividades práticas e conteúdos selecionados.
+A proposta da EDUCA TECH_SAAI é oferecer uma experiência moderna de ensino digital, permitindo que estudantes acompanhem sua evolução e desenvolvam novas competências por meio de atividades práticas e conteúdos selecionados.
 
 O sistema foi pensado para unir aprendizado, desempenho e usabilidade em uma plataforma intuitiva e funcional.
 
