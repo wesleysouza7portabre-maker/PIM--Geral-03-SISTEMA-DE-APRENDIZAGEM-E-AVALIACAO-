@@ -1,4 +1,6 @@
-# TechVagas
+# EDUCA TECH_SAAI 
+
+( SISTEMA DE AVALIAÇAO E APRENDIZADO INTEGRADO )
 
 Plataforma web de avaliação e apoio à aprendizagem desenvolvida como projeto acadêmico para o **PIM III - Projeto Integrado Multidisciplinar** do curso de **Análise e Desenvolvimento de Sistemas - UNIP**.
 
