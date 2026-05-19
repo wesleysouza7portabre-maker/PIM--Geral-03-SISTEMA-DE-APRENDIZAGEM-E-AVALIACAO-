@@ -156,7 +156,7 @@ Etapas concluídas até o momento:
 ## 9. Estrutura do Projeto
 
 ```
-TechVagas/
+ EDUCA TECH_SAAI 
 ├── frontend/
 ├── backend/
 ├── banco-de-dados/
