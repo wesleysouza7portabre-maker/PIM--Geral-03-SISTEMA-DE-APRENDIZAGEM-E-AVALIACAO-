@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Viewport responsivo: fundamental para compatibilidade mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EducaTech — Plataforma de Avaliação e Apoio à Aprendizagem" />
+  <title>EducaTech | Plataforma Educacional</title>
+
+  <!-- CSS externo separado (requisito do projeto) -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google Fonts: Nunito, Merriweather, DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- Splash screen exibida ao carregar a aplicação -->
+  <div id="splash-screen" class="splash-screen" role="status" aria-label="Carregando">
+    <div class="splash-inner">
+      <!-- LOGO AQUI (splash): substitua por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <div class="splash-logo">Educa<span>Tech</span></div>
+      <div class="splash-spinner" aria-hidden="true"></div>
+    </div>
+    <footer class="auth-copyright">© 2026 TechVagas</footer>
+  </div>
+
+  <!-- ================================================
+       TOAST de feedback rápido (acessível)
+       ================================================ -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ================================================
+       TELA INICIAL (HOME)
+       Screen visível por padrão ao abrir o site
+       ================================================ -->
+  <main id="screen-home" class="screen active">
+
+    <!-- Cabeçalho da home: logo clicável (volta à home) + setas de navegação + cartão do usuário -->
+    <header class="page-header home-header">
+      <!-- Setas de navegação (voltar / avançar no histórico de telas) -->
+      <div class="nav-arrows" aria-label="Navegação de páginas">
+        <button class="nav-arrow" id="btn-nav-back" onclick="navBack()" aria-label="Voltar página">‹</button>
+        <button class="nav-arrow" id="btn-nav-fwd" onclick="navForward()" aria-label="Avançar página">›</button>
+      </div>
+
+      <!-- LOGO AQUI: para usar uma imagem, troque a div interna por: <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text">Educa<span>Tech</span></span>
+      </button>
+
+      <!-- Cartão do usuário no canto superior direito (visível só quando logado) -->
+      <div class="user-chip" id="home-user-chip" style="display:none;" aria-label="Usuário logado">
+        <div class="user-chip-avatar" id="user-chip-avatar">U</div>
+        <div class="user-chip-info">
+          <span class="user-chip-name" id="user-chip-name">—</span>
+          <span class="user-chip-role" id="user-chip-role">—</span>
+          <span class="user-chip-matricula" id="user-chip-matricula">—</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <!-- Saudação personalizada ao usuário (muda conforme a hora do dia) -->
+      <section aria-labelledby="greeting-heading">
+        <h1 class="greeting" id="home-greeting">
+          <span id="home-greeting-text">Boa tarde!</span>
+          <span class="greeting-emoji" aria-hidden="true">👋</span>
+          <span class="home-clock" id="home-clock" aria-live="polite">São 00:00</span>
+        </h1>
+        <p class="greeting-sub" id="home-greeting-sub">Bem-vindo à melhor plataforma de aprendizagem à distância.</p>
+      </section>
+
+      <!-- ---- LAYOUT DE DOIS PAINÉIS EM DESKTOP ---- -->
+      <div class="home-layout">
+
+        <!-- PAINEL PRINCIPAL -->
+        <div>
+
+          <!-- Seção: curso em andamento OU incentivo para começar -->
+          <section aria-label="Curso em progresso" class="mb-lg">
+
+            <!-- Exibido quando o usuário ESTÁ fazendo um curso -->
+            <div class="course-continue-card" id="course-in-progress" style="display:none;">
+              <p class="course-label">Continuar de onde parei</p>
+              <h3 id="progress-course-name">Nome do Curso</h3>
+              <!-- Barra de progresso com valor acessível -->
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do curso">
+                <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
+              </div>
+              <div class="flex-between">
+                <span class="progress-text" id="progress-percent">0%</span>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Abrindo curso...')">
+                  Continuar ▶
+                </button>
+              </div>
+            </div>
+
+            <!-- Exibido quando o usuário NÃO tem curso em andamento -->
+            <div class="no-course-card" id="no-course-card">
+              <!-- Ícone/imagem do curso sugerido (atualizado via JS) -->
+              <!-- IMAGEM AQUI (sugestão de curso): substitua o emoji por <img src="images/curso-sugerido.png" alt="Curso sugerido" /> -->
+              <div class="course-icon" id="suggested-icon">📚</div>
+              <p id="suggested-text">Que tal começar por <strong id="suggested-course">Análise e Desenvolvimento de Sistemas</strong>?</p>
+              <button class="btn btn-primary"
+                onclick="switchScreen('courses')">
+                Ver Disciplinas
+              </button>
+            </div>
+          </section>
+
+          <!-- Seção: visão geral dos cursos disponíveis -->
+          <section aria-labelledby="courses-overview-heading">
+            <p class="home-section-title" id="courses-overview-heading">Disciplinas disponíveis</p>
+            <div class="courses-mini-grid">
+              <!-- Mini-cards gerados pelo JavaScript abaixo -->
+            </div>
+          </section>
+
+        </div><!-- /painel principal -->
+
+        <!-- PAINEL LATERAL (resumo rápido — apenas desktop via CSS grid) -->
+        <aside aria-label="Resumo do perfil" id="home-aside" style="display:none;">
+          <div class="card">
+            <h3 class="mb-md" style="font-size:0.9rem;">Meu Desempenho</h3>
+            <!-- Dados preenchidos via JS para usuários logados -->
+            <div id="home-performance-summary">
+              <p style="font-size:0.82rem;">Faça login para ver seu progresso.</p>
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /home-layout -->
+
+    </div><!-- /container -->
+  </main>
+
+
+  <!-- ================================================
+       TELA DE CURSOS
+       Acessível por visitantes não logados
+       ================================================ -->
+  <main id="screen-courses" class="screen">
+
+    <!-- Cabeçalho padrão: setas de navegação + logo (clicável → home) -->
+    <header class="page-header">
+      <div class="nav-arrows" aria-label="Navegação de páginas">
+        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
+        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
+      </div>
+      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text">Educa<span>Tech</span></span>
+      </button>
+    </header>
+
+    <div class="container">
+      <!-- Título obrigatório conforme requisito -->
+      <h1 class="screen-title" style="margin-top:var(--spacing-lg);">Disciplinas</h1>
+
+      <!-- Grid de cards de disciplinas -->
+      <section aria-label="Lista de disciplinas">
+        <div class="courses-grid">
+
+          <!-- 1. Análise e Desenvolvimento de Sistemas — Azul técnico -->
+          <article class="discipline-card course-ads"
+                   onclick="openCourse('ads')"
+                   role="button" tabindex="0"
+                   aria-label="Análise e Desenvolvimento de Sistemas">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">💻</div>
+              <div>
+                <h3>Análise e Desenvolvimento de Sistemas</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <!-- Barra de progresso do curso -->
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-ads" style="width:0%; background: var(--course-ads);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-ads" style="color:var(--course-ads);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. Ciência da Computação — Roxo profundo -->
+          <article class="discipline-card course-cc"
+                   onclick="openCourse('cc')"
+                   role="button" tabindex="0"
+                   aria-label="Ciência da Computação">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">🔬</div>
+              <div>
+                <h3>Ciência da Computação</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-cc" style="width:0%; background: var(--course-cc);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-cc" style="color:var(--course-cc);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. Design Gráfico — Laranja criativo -->
+          <article class="discipline-card course-design"
+                   onclick="openCourse('design')"
+                   role="button" tabindex="0"
+                   aria-label="Design Gráfico">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">🎨</div>
+              <div>
+                <h3>Design Gráfico</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-design" style="width:0%; background: var(--course-design);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-design" style="color:var(--course-design);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4. T.I — Verde tecnologia -->
+          <article class="discipline-card course-ti"
+                   onclick="openCourse('ti')"
+                   role="button" tabindex="0"
+                   aria-label="Tecnologia da Informação">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">🖧</div>
+              <div>
+                <h3>T.I</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-ti" style="width:0%; background: var(--course-ti);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-ti" style="color:var(--course-ti);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5. Engenharia da Computação — Âmbar institucional -->
+          <article class="discipline-card course-ec"
+                   onclick="openCourse('ec')"
+                   role="button" tabindex="0"
+                   aria-label="Engenharia da Computação">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">⚙️</div>
+              <div>
+                <h3>Engenharia da Computação</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-ec" style="width:0%; background: var(--course-ec);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-ec" style="color:var(--course-ec);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 6. Administração — Teal corporativo -->
+          <article class="discipline-card course-adm"
+                   onclick="openCourse('adm')"
+                   role="button" tabindex="0"
+                   aria-label="Administração">
+            <div class="discipline-card-header">
+              <div class="discipline-icon" aria-hidden="true">📊</div>
+              <div>
+                <h3>Administração</h3>
+                <p>25 aulas · 5 módulos</p>
+              </div>
+            </div>
+            <div class="discipline-card-body">
+              <div class="progress-bar-wrap" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="prog-adm" style="width:0%; background: var(--course-adm);"></div>
+              </div>
+              <div class="flex-between mt-sm">
+                <span class="progress-text" id="pct-adm" style="color:var(--course-adm);">0%</span>
+                <div class="medals-row">
+                  <span class="medal medal-locked">🏅 Iniciante</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- /courses-grid -->
+      </section>
+
+      <!-- Aviso para visitantes não logados -->
+      <aside id="guest-notice"
+             aria-label="Aviso para visitantes"
+             class="card mt-lg"
+             style="background:var(--color-surface-2); border-color:var(--color-primary); text-align:center; display:none;">
+        <p style="font-weight:600; color:var(--color-text); margin-bottom:var(--spacing-sm);">
+          Você está navegando como convidado
+        </p>
+        <p style="font-size:0.88rem; margin-bottom:var(--spacing-md);">
+          Faça login ou cadastre-se para acessar os cursos e acompanhar seu progresso.
+        </p>
+        <button class="btn btn-primary" onclick="switchScreen('login')">
+          Entrar na Plataforma
+        </button>
+      </aside>
+
+    </div><!-- /container -->
+  </main>
+
+
+  
+
+  <!-- ================================================
+       TELA DE ATIVIDADES DA DISCIPLINA
+       Aberta ao clicar em uma disciplina na tela de Cursos.
+       As Unidades e Atividades são placeholders — basta
+       trocar os textos abaixo, ou carregá-los via API a
+       partir do arquivo C# (ver função loadActivitiesFromCSharp).
+       ================================================ -->
+  <main id="screen-activities" class="screen">
+    <header class="page-header">
+      <div class="nav-arrows" aria-label="Navegação de páginas">
+        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
+        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
+      </div>
+      <!-- LOGO AQUI: substitua por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text">Educa<span>Tech</span></span>
+      </button>
+    </header>
+
+    <div class="container">
+      <h1 class="screen-title" id="activities-course-title" style="margin-top:var(--spacing-lg);">Disciplina</h1>
+      <p id="activities-course-sub" style="margin-bottom:var(--spacing-lg);">Selecione uma atividade para começar.</p>
+
+      <!-- Lista de unidades + atividades é gerada via JS (função renderActivities) -->
+      <div id="activities-list" aria-label="Lista de unidades e atividades"></div>
+    </div>
+  </main>
+
+
+  <!-- ================================================
+       TELA DE PERFIL
+       Exibe menus diferentes por tipo de usuário
+       ================================================ -->
+  <main id="screen-profile" class="screen">
+
+    <header class="page-header">
+      <div class="nav-arrows" aria-label="Navegação de páginas">
+        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
+        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
+      </div>
+      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text">Educa<span>Tech</span></span>
+      </button>
+    </header>
+
+    <div class="container">
+
+      <!-- Perfil do usuário logado -->
+      <div id="profile-logged">
+
+        <!-- Cabeçalho de perfil com avatar e nome -->
+        <div class="profile-header" style="margin-top:var(--spacing-lg);">
+          <div class="avatar" id="profile-avatar" aria-hidden="true">U</div>
+          <div class="profile-header-info">
+            <h3 id="profile-name">Usuário</h3>
+            <span class="role-badge" id="profile-role-badge">Aluno</span>
+            <p style="font-size:0.78rem; margin-top:4px;" id="profile-matricula">Matrícula: —</p>
+          </div>
+        </div>
+
+        <!-- ---- MENUS POR TIPO DE USUÁRIO ---- -->
+
+        <!-- Menu do ALUNO -->
+        <nav id="menu-aluno" aria-label="Menu do aluno" class="profile-menu" style="display:none;">
+          <button class="profile-menu-item" onclick="showPanel('panel-meus-dados')">
+            <span class="menu-icon">👤</span> Meus Dados
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-notas')">
+            <span class="menu-icon">📋</span> Minhas Notas
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
+            <span class="menu-icon">📅</span> Calendário
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-avisos')">
+            <span class="menu-icon">🔔</span> Avisos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item"
+                  onclick="openCertModal()"
+                  id="btn-certificado" style="display:none;">
+            <span class="menu-icon">🎓</span> Emitir Certificado
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item btn-danger"
+                  onclick="logout()"
+                  style="margin-top:var(--spacing-md); border-color:#fca5a5; color:#b91c1c;">
+            <span class="menu-icon">🚪</span> Sair da Conta
+          </button>
+        </nav>
+
+        <!-- Menu do PROFESSOR -->
+        <nav id="menu-professor" aria-label="Menu do professor" class="profile-menu" style="display:none;">
+          <button class="profile-menu-item" onclick="showPanel('panel-gerenciar-cursos')">
+            <span class="menu-icon">📚</span> Gerenciar Cursos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
+            <span class="menu-icon">👥</span> Alunos e Instituição
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
+            <span class="menu-icon">📅</span> Calendário
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item btn-danger"
+                  onclick="logout()"
+                  style="margin-top:var(--spacing-md); border-color:#fca5a5; color:#b91c1c;">
+            <span class="menu-icon">🚪</span> Sair da Conta
+          </button>
+        </nav>
+
+        <!-- Menu do COORDENADOR -->
+        <nav id="menu-coordenador" aria-label="Menu do coordenador" class="profile-menu" style="display:none;">
+          <button class="profile-menu-item" onclick="showPanel('panel-gerenciar-cursos')">
+            <span class="menu-icon">📚</span> Gerenciar Cursos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
+            <span class="menu-icon">👥</span> Alunos e Instituição
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-avisos-admin')">
+            <span class="menu-icon">📢</span> Avisos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
+            <span class="menu-icon">📅</span> Calendário
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item btn-danger"
+                  onclick="logout()"
+                  style="margin-top:var(--spacing-md); border-color:#fca5a5; color:#b91c1c;">
+            <span class="menu-icon">🚪</span> Sair da Conta
+          </button>
+        </nav>
+
+        <!-- Menu do ADMINISTRADOR -->
+        <nav id="menu-administrador" aria-label="Menu do administrador" class="profile-menu" style="display:none;">
+          <button class="profile-menu-item" onclick="showPanel('panel-gerenciar-cursos')">
+            <span class="menu-icon">⚙️</span> Gerenciar Cursos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
+            <span class="menu-icon">👥</span> Usuários
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-avisos-admin')">
+            <span class="menu-icon">📢</span> Avisos
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
+            <span class="menu-icon">📅</span> Calendário
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item btn-danger"
+                  onclick="logout()"
+                  style="margin-top:var(--spacing-md); border-color:#fca5a5; color:#b91c1c;">
+            <span class="menu-icon">🚪</span> Sair da Conta
+          </button>
+        </nav>
+
+      </div><!-- /profile-logged -->
+
+      <!-- Exibido quando o usuário NÃO está logado -->
+      <div id="profile-guest" style="display:none; text-align:center; padding-top:var(--spacing-2xl);">
+        <div style="font-size:3rem; margin-bottom:var(--spacing-md);">👤</div>
+        <h2 style="margin-bottom:var(--spacing-sm);">Perfil não disponível</h2>
+        <p style="margin-bottom:var(--spacing-lg);">Faça login para acessar seu perfil e acompanhar seu progresso.</p>
+        <button class="btn btn-primary btn-lg" onclick="switchScreen('login')">
+          Fazer Login
+        </button>
+      </div>
+
+      <!-- ---- PAINÉIS DE DETALHES (ocultos, revelados ao clicar no menu) ---- -->
+
+      <!-- PAINEL: Meus Dados -->
+      <section id="panel-meus-dados" class="profile-panel" aria-label="Meus dados">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-meus-dados')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Meus Dados</h2>
+        </div>
+        <div class="card">
+          <table class="data-table" aria-label="Dados do usuário">
+            <tbody>
+              <tr><th scope="row">Nome</th><td id="dados-nome">—</td></tr>
+              <tr><th scope="row">E-mail</th><td id="dados-email">—</td></tr>
+              <tr><th scope="row">CPF</th><td id="dados-cpf">—</td></tr>
+              <tr><th scope="row">Telefone</th><td id="dados-telefone">—</td></tr>
+              <tr><th scope="row">Endereço</th><td id="dados-endereco">—</td></tr>
+              <tr><th scope="row">Cidade / Estado</th><td id="dados-cidade">—</td></tr>
+              <tr><th scope="row">CEP</th><td id="dados-cep">—</td></tr>
+              <tr><th scope="row">Matrícula</th><td id="dados-matricula">—</td></tr>
+              <tr><th scope="row">Tipo de usuário</th><td id="dados-tipo">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PAINEL: Minhas Notas -->
+      <section id="panel-notas" class="profile-panel" aria-label="Minhas notas">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-notas')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Minhas Notas</h2>
+        </div>
+        <div class="card">
+          <table class="data-table" aria-label="Notas por disciplina">
+            <thead>
+              <tr>
+                <th scope="col">Disciplina</th>
+                <th scope="col">Progresso</th>
+                <th scope="col">Nota</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Análise e Desenv. de Sistemas</td>
+                <td><span id="nota-prog-ads">0%</span></td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+              <tr>
+                <td>Ciência da Computação</td>
+                <td>0%</td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+              <tr>
+                <td>Design Gráfico</td>
+                <td>0%</td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+              <tr>
+                <td>T.I</td>
+                <td>0%</td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+              <tr>
+                <td>Engenharia da Computação</td>
+                <td>0%</td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+              <tr>
+                <td>Administração</td>
+                <td>0%</td>
+                <td><span class="grade-badge grade-d">—</span></td>
+                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PAINEL: Calendário (placeholder visual) -->
+      <section id="panel-calendario" class="profile-panel" aria-label="Calendário">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-calendario')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Calendário</h2>
+        </div>
+
+        <!-- Botão "Adicionar ao Calendário" para coordenadores/professores -->
+        <div id="btn-add-calendar-wrap" style="display:none; margin-bottom:var(--spacing-md);">
+          <button class="btn btn-primary" onclick="showToast('Funcionalidade disponível em breve!')">
+            + Adicionar ao Calendário
+          </button>
+        </div>
+
+        <!-- Grade visual do calendário -->
+        <div class="calendar-placeholder" id="calendar-widget" aria-label="Calendário de atividades">
+          <p class="cal-month" id="cal-month-title">Maio 2025</p>
+          <div class="calendar-grid" id="calendar-grid" role="grid">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Legenda de eventos -->
+        <div class="card mt-md">
+          <p style="font-size:0.8rem; font-weight:700; margin-bottom:var(--spacing-sm);">
+            📌 Eventos do mês
+          </p>
+          <p style="font-size:0.82rem; color:var(--color-text-muted);">
+            Nenhum evento cadastrado para este mês.
+            <br><em>(Reservado para integração com banco de dados)</em>
+          </p>
+        </div>
+      </section>
+
+      <!-- PAINEL: Avisos (aluno) -->
+      <section id="panel-avisos" class="profile-panel" aria-label="Avisos">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-avisos')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Avisos</h2>
+        </div>
+        <!-- Aviso de boas-vindas padrão -->
+        <div class="notice-card">
+          <p class="notice-date">01/05/2026</p>
+          <p class="notice-title">🎉 Bem-vindo à EducaTech!</p>
+          <p class="notice-body">Sua conta foi criada com sucesso. Explore as disciplinas disponíveis e comece sua jornada de aprendizagem.</p>
+        </div>
+        <!-- Placeholder para outros avisos -->
+        <div class="empty-state" id="notices-empty" style="display:none;">
+          <div class="empty-icon">✅</div>
+          <p>Você está atualizado(a)!</p>
+        </div>
+      </section>
+
+      <!-- PAINEL: Avisos (admin/coordenador/professor) -->
+      <section id="panel-avisos-admin" class="profile-panel" aria-label="Gestão de avisos">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-avisos-admin')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Avisos</h2>
+        </div>
+        <button class="btn btn-primary mb-lg"
+                onclick="showToast('Modal de envio de aviso aberto! (integrar com banco de dados)')">
+          📢 Enviar Aviso Global
+        </button>
+        <div class="notice-card">
+          <p class="notice-date">01/05/2026</p>
+          <p class="notice-title">🎉 Plataforma lançada!</p>
+          <p class="notice-body">A plataforma EducaTech foi oficialmente lançada. Boas-vindas a todos os usuários.</p>
+        </div>
+      </section>
+
+      <!-- PAINEL: Gerenciar Cursos (prof/coord/admin) -->
+      <section id="panel-gerenciar-cursos" class="profile-panel" aria-label="Gerenciar cursos">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-gerenciar-cursos')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Gerenciar Cursos</h2>
+        </div>
+
+        <!-- Os cards são gerados via JS (renderManageCourses).
+             Professor: vê apenas as disciplinas atribuídas pelo coordenador/admin.
+             Coordenador / Administrador: veem todas as disciplinas. -->
+        <div class="admin-grid" id="manage-courses-grid"></div>
+
+        <!-- Mensagem mostrada ao professor sem disciplinas atribuídas -->
+        <div class="empty-state" id="no-disciplines-msg" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <p>Nenhuma disciplina disponível</p>
+          <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:8px;">
+            Solicite a um coordenador ou administrador a atribuição de uma disciplina.
+          </p>
+        </div>
+
+        <!-- Apenas coordenador / administrador podem adicionar novos cursos -->
+        <button class="btn btn-primary" id="btn-add-course"
+                onclick="showToast('Novo curso: integrar com banco de dados')"
+                style="display:none;">
+          + Adicionar Novo Curso
+        </button>
+      </section>
+
+      <!-- PAINEL: Alunos e Instituição -->
+      <section id="panel-alunos-inst" class="profile-panel" aria-label="Alunos e Instituição">
+        <div class="panel-header">
+          <button class="back-btn" onclick="hidePanel('panel-alunos-inst')" aria-label="Voltar">← Voltar</button>
+          <h2 style="font-size:1.1rem;">Alunos e Instituição</h2>
+        </div>
+
+        <!-- Tabs: Alunos / Instituição -->
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" role="tab" aria-selected="true"
+                  onclick="switchTab('tab-alunos', this)">Alunos</button>
+          <button class="tab-btn" role="tab" aria-selected="false"
+                  id="tab-inst-btn"
+                  onclick="switchTab('tab-inst', this)">Instituição</button>
+        </div>
+
+        <!-- Tab: Lista de alunos -->
+        <div id="tab-alunos" class="tab-panel active" role="tabpanel">
+          <div class="card">
+            <table class="data-table" aria-label="Lista de alunos">
+              <thead>
+                <tr>
+                  <th scope="col">Matrícula</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Curso</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dados de exemplo; substituir por consulta SQL -->
+                <tr>
+                  <td>ALN-001</td>
+                  <td>Hugo Souza</td>
+                  <td><span class="chip">ALN</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="showToast('Abrindo perfil: Hugo Souza')">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CC-001</td>
+                  <td>João Santos</td>
+                  <td><span class="chip">CC</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="showToast('Abrindo perfil: João Santos')">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ADM-001</td>
+                  <td>Bruno Santos</td>
+                  <td><span class="chip">Adm.</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="showToast('Abrindo perfil: Bruno Santos')">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Membros da instituição -->
+        <div id="tab-inst" class="tab-panel" role="tabpanel">
+          <div class="card">
+            <table class="data-table" aria-label="Membros da instituição">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Cargo</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PROF-001</td>
+                  <td>Prof. Carlos Mendes</td>
+                  <td><span class="chip" style="background:#e0f2fe; border-color:#7dd3fc; color:#0c4a6e;">Professor</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="showToast('Abrindo perfil: Prof. Carlos Mendes')">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>COORD-001</td>
+                  <td>Coord. Lúcia Ferreira</td>
+                  <td><span class="chip" style="background:#fef3c7; border-color:#fcd34d; color:#78350f;">Coordenadora</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="showToast('Abrindo perfil: Coord. Lúcia Ferreira')">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+
+  <!-- ================================================
+       TELA DE LOGIN
+       ================================================ -->
+  <main id="screen-login" role="main" aria-label="Login">
+
+    <!-- Logo centralizada no topo do login -->
+    <div class="auth-logo" style="margin-bottom:var(--spacing-lg);">
+      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text" style="font-size:2rem;">Educa<span>Tech</span></span>
+      </button>
+      <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:4px;">
+        Plataforma de Avaliação e Aprendizagem
+      </p>
+    </div>
+
+    <div class="auth-box">
+      <h2>Entrar na plataforma</h2>
+      <p class="auth-sub">Selecione seu perfil de acesso</p>
+
+      <!-- Seleção de tipo de usuário -->
+      <!-- Mostra ao usuário em que parte do sistema ele está -->
+      <div class="user-type-selector" role="group" aria-label="Tipo de usuário">
+        <button class="user-type-btn selected" id="btn-tipo-aluno"
+                onclick="selectUserType('aluno')" aria-pressed="true">
+          <div class="type-icon">🎓</div>
+          Sou Aluno
+        </button>
+        <button class="user-type-btn" id="btn-tipo-inst"
+                onclick="selectUserType('instituicao')" aria-pressed="false">
+          <div class="type-icon">🏫</div>
+          Sou da Instituição
+        </button>
+      </div>
+
+      <!-- Campo de cargo (apenas para "Instituição") -->
+      <div class="form-group" id="cargo-group" style="display:none;">
+        <label for="login-cargo">Cargo</label>
+        <select class="form-control" id="login-cargo" aria-required="true">
+          <option value="">Selecione seu cargo</option>
+          <option value="professor">Professor</option>
+          <option value="coordenador">Coordenador</option>
+          <option value="administrador">Administrador</option>
+        </select>
+      </div>
+
+      <!-- Formulário de login -->
+      <form id="form-login" novalidate onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">E-mail</label>
+          <input type="email" class="form-control" id="login-email"
+                 placeholder="seuemail@exemplo.com"
+                 autocomplete="email"
+                 aria-required="true" />
+        </div>
+
+        <div class="form-group">
+          <label for="login-senha">Senha</label>
+          <input type="password" class="form-control" id="login-senha"
+                 placeholder="••••••••"
+                 autocomplete="current-password"
+                 aria-required="true" />
+          <div class="form-error" id="login-error">E-mail ou senha incorretos.</div>
+        </div>
+
+        <!-- Botão de login — tamanho grande para facilitar toque no mobile -->
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:var(--spacing-md);">
+          Entrar
+        </button>
+      </form>
+
+      <!-- Link para recuperação de senha -->
+      <div class="auth-link">
+        <a href="#" onclick="switchScreen('forgot'); return false;">Esqueci minha senha</a>
+      </div>
+
+      <div class="divider">ou</div>
+
+      <!-- Link para cadastro -->
+      <div class="auth-link">
+        Não tem conta?
+        <a href="#" onclick="switchScreen('register'); return false;">Matricule-se</a>
+      </div>
+    </div>
+    <footer class="auth-copyright">© 2026 TechVagas</footer>
+  </main>
+
+
+  <!-- ================================================
+       TELA DE CADASTRO
+       ================================================ -->
+  <main id="screen-register" role="main" aria-label="Cadastro">
+
+    <div class="auth-logo" style="margin-bottom:var(--spacing-md);">
+      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text" style="font-size:1.8rem;">Educa<span>Tech</span></span>
+      </button>
+    </div>
+
+    <div class="auth-box" style="max-width:520px;">
+      <h2>Matricule-se</h2>
+      <p class="auth-sub">Preencha seus dados para se matricular</p>
+
+      <!-- Tipo de conta no cadastro -->
+      <div class="form-group">
+        <label for="reg-tipo">Tipo de usuário</label>
+        <select class="form-control" id="reg-tipo" aria-required="true">
+          <option value="aluno">Aluno</option>
+          <option value="professor">Professor</option>
+          <option value="coordenador">Coordenador</option>
+          <option value="administrador">Administrador</option>
+        </select>
+      </div>
+
+      <form id="form-register" novalidate onsubmit="handleRegister(event)">
+
+        <!-- Grid 2 colunas para campos menores -->
+        <div class="form-grid-2">
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="reg-nome">Nome completo *</label>
+            <input type="text" class="form-control" id="reg-nome"
+                   placeholder="Seu nome completo"
+                   autocomplete="name" aria-required="true" />
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="reg-endereco">Endereço *</label>
+            <input type="text" class="form-control" id="reg-endereco"
+                   placeholder="Rua, número, complemento"
+                   autocomplete="street-address" aria-required="true" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-cidade">Cidade *</label>
+            <input type="text" class="form-control" id="reg-cidade"
+                   placeholder="Sua cidade"
+                   autocomplete="address-level2" aria-required="true" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-estado">Estado *</label>
+            <!-- Select de estados brasileiros -->
+            <select class="form-control" id="reg-estado" autocomplete="address-level1" aria-required="true">
+              <option value="">UF</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+              <option selected>SP</option><option>SE</option><option>TO</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-cep">CEP *</label>
+            <input type="text" class="form-control" id="reg-cep"
+                   placeholder="00000-000"
+                   maxlength="9"
+                   autocomplete="postal-code"
+                   aria-required="true"
+                   oninput="maskCEP(this)" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-telefone">Telefone *</label>
+            <input type="tel" class="form-control" id="reg-telefone"
+                   placeholder="(00) 00000-0000"
+                   maxlength="15"
+                   autocomplete="tel"
+                   aria-required="true"
+                   oninput="maskTel(this)" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-cpf">CPF *</label>
+            <input type="text" class="form-control" id="reg-cpf"
+                   placeholder="000.000.000-00"
+                   maxlength="14"
+                   aria-required="true"
+                   oninput="maskCPF(this)" />
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="reg-email">E-mail *</label>
+            <input type="email" class="form-control" id="reg-email"
+                   placeholder="seuemail@exemplo.com"
+                   autocomplete="email" aria-required="true" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-senha">Senha *</label>
+            <input type="password" class="form-control" id="reg-senha"
+                   placeholder="Mínimo 6 caracteres"
+                   autocomplete="new-password"
+                   minlength="6" aria-required="true" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-confirma-senha">Confirmar Senha *</label>
+            <input type="password" class="form-control" id="reg-confirma-senha"
+                   placeholder="Repita a senha"
+                   autocomplete="new-password" aria-required="true" />
+            <!-- Feedback de erro exibido via JS quando senhas não conferem -->
+            <div class="form-error" id="senha-mismatch-error">
+              As senhas não coincidem.
+            </div>
+          </div>
+        </div><!-- /form-grid-2 -->
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:var(--spacing-sm);">
+          Matricular
+        </button>
+      </form>
+
+      <div class="auth-link">
+        Já é aluno(a)?
+        <a href="#" onclick="switchScreen('login'); return false;">Fazer Login</a>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- ================================================
+       TELA DE RECUPERAÇÃO DE SENHA
+       ================================================ -->
+  <main id="screen-forgot" role="main" aria-label="Recuperação de senha">
+
+    <div class="auth-logo" style="margin-bottom:var(--spacing-lg);">
+      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
+      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+        <span class="logo-text" style="font-size:1.8rem;">Educa<span>Tech</span></span>
+      </button>
+    </div>
+
+    <div class="auth-box">
+      <h2>Recuperar Senha</h2>
+      <p class="auth-sub">
+        Insira seu e-mail ou CPF cadastrado. Enviaremos um link de redefinição.
+      </p>
+
+      <form id="form-forgot" novalidate onsubmit="handleForgot(event)">
+        <div class="form-group">
+          <label for="forgot-input">E-mail ou CPF</label>
+          <input type="text" class="form-control" id="forgot-input"
+                 placeholder="seuemail@exemplo.com ou 000.000.000-00"
+                 aria-required="true" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:var(--spacing-md);">
+          Enviar E-mail de Recuperação
+        </button>
+      </form>
+
+      <div class="auth-link mt-md">
+        <a href="#" onclick="switchScreen('login'); return false;">← Voltar ao Login</a>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- ================================================
+       MODAL DO CERTIFICADO
+       Geração do certificado com dados do usuário
+       ================================================ -->
+  <div id="modal-certificado" class="modal-overlay" role="dialog"
+       aria-modal="true" aria-labelledby="cert-modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="cert-modal-title">🎓 Emitir Certificado</h3>
+        <button class="modal-close" onclick="closeModal('modal-certificado')"
+                aria-label="Fechar modal">✕</button>
+      </div>
+
+      <!-- Preview do certificado — template customizável -->
+      <div id="certificate-preview" aria-label="Visualização do certificado">
+        <div class="cert-logo">EducaTech</div>
+        <div class="cert-title">CERTIFICADO DE CONCLUSÃO</div>
+        <div class="cert-body">
+          <p>Certificamos que</p>
+          <span class="cert-name" id="cert-name">Nome do Aluno</span>
+          <p>concluiu com êxito o curso de</p>
+          <span class="cert-course" id="cert-course">Nome do Curso</span>
+          <br /><br />
+          <p>Carga horária: <strong id="cert-hours">—</strong> horas</p>
+          <p>Tempo total dedicado: <strong id="cert-time">—</strong></p>
+        </div>
+        <div class="cert-footer">
+          <p>EducaTech — Plataforma de Avaliação e Apoio à Aprendizagem</p>
+          <p id="cert-date">Data de emissão: —</p>
+        </div>
+      </div>
+
+      <!-- Ações do modal -->
+      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+        <button class="btn btn-secondary"
+                onclick="closeModal('modal-certificado')">Cancelar</button>
+        <button class="btn btn-primary"
+                onclick="downloadCertificate()">
+          📥 Baixar Certificado
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <!-- Modal de confirmação de logoff -->
+  <div id="modal-logout" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+    <div class="modal" style="max-width:420px;">
+      <div class="modal-header">
+        <h3 id="logout-modal-title">Sair da conta</h3>
+        <button class="modal-close" onclick="closeModal('modal-logout')" aria-label="Fechar">✕</button>
+      </div>
+      <p style="margin:var(--spacing-md) 0;">Tem certeza que deseja encerrar sua sessão?</p>
+      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+        <button class="btn btn-secondary" onclick="closeModal('modal-logout')">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmLogout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================
+       BARRA DE NAVEGAÇÃO INFERIOR (GLOBAL)
+       Presente em todas as telas principais
+       ================================================ -->
+  <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Navegação principal">
+
+    <!-- Botão: Tela Inicial -->
+    <button class="nav-item active" id="nav-home"
+            onclick="switchScreen('home')"
+            aria-label="Tela inicial" aria-current="page">
+      <!-- Ícone SVG inline — melhor compatibilidade e escalabilidade -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+      </svg>
+      <span>Início</span>
+    </button>
+
+    <!-- Botão: Cursos -->
+    <button class="nav-item" id="nav-courses"
+            onclick="switchScreen('courses')"
+            aria-label="Cursos">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+      </svg>
+      <span>Cursos</span>
+    </button>
+
+    <!-- Botão: Perfil -->
+    <button class="nav-item" id="nav-profile"
+            onclick="switchScreen('profile')"
+            aria-label="Perfil">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+      </svg>
+      <span>Perfil</span>
+    </button>
+
+  </nav>
+
+
+  <!-- ================================================
+       JAVASCRIPT
+       Lógica de navegação, autenticação e UI
+       ================================================ -->
+  <script>
+    /* ============================================
+       DADOS SIMULADOS
+       Em produção, substituir por chamadas à API/banco SQL
+       ============================================ */
+
+    /* Dados dos usuários cadastrados (simula banco de dados) */
+    const usersDB = [
+      {
+        id: 1, tipo: 'aluno', email: 'aluno@edu.com', senha: '123456',
+        nome: 'Hugo Souza', cpf: '000.000.000-01', telefone: '(12) 99999-0001',
+        endereco: 'Rua das Flores, 100', cidade: 'São Paulo', estado: 'SP',
+        cep: '12300-000', matricula: 'ALN-001',
+        // Todo aluno começa com progresso, notas e frequência zerados
+        progresso:  { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 },
+        notas:      { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 },
+        frequencia: { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 }
+      },
+      {
+        id: 2, tipo: 'professor', email: 'prof@edu.com', senha: '123456',
+        nome: 'Carlos Mendes', cpf: '000.000.000-02', telefone: '(12) 99999-0002',
+        endereco: 'Av. Central, 200', cidade: 'São José dos Campos', estado: 'SP',
+        cep: '12300-001', matricula: 'PROF-001',
+        progresso: {},
+        // Disciplinas atribuídas pelo coordenador/admin.
+        // Vazio = professor sem disciplinas (verá "Nenhuma disciplina disponível").
+        // Para atribuir, adicione os IDs: ex.: ['ads', 'cc']
+        disciplinasAtribuidas: []
+      },
+      {
+        id: 3, tipo: 'coordenador', email: 'coord@edu.com', senha: '123456',
+        nome: 'Lúcia Ferreira', cpf: '000.000.000-03', telefone: '(12) 99999-0003',
+        endereco: 'Rua da Paz, 300', cidade: 'São José dos Campos', estado: 'SP',
+        cep: '12300-002', matricula: 'COORD-001',
+        progresso: {}
+      },
+      {
+        id: 4, tipo: 'administrador', email: 'admin@edu.com', senha: '123456',
+        nome: 'Bruno Santos', cpf: '000.000.000-04', telefone: '(12) 99999-0004',
+        endereco: 'Avenida X, 1', cidade: 'Jacareí', estado: 'SP',
+        cep: '01000-000', matricula: 'ADM-001',
+        progresso: {}
+      }
+    ];
+
+    /* Dados das disciplinas */
+    const courses = [
+      { id: 'ads',    name: 'Análise e Des. de Sistemas', icon: '💻', color: '#4f8ef7' },
+      { id: 'cc',     name: 'Ciência da Computação',      icon: '🔬', color: '#7c5cbf' },
+      { id: 'design', name: 'Design Gráfico',              icon: '🎨', color: '#f97316' },
+      { id: 'ti',     name: 'T.I',                         icon: '🖧', color: '#16a34a' },
+      { id: 'ec',name: 'Engenharia da Computação',         icon: '⚙️', color: '#2c0000' },
+      { id: 'adm',    name: 'Administração',               icon: '📊', color: '#0e7490' }
+    ];
+
+    /* Estado atual do usuário logado */
+    let currentUser = null;
+    /* Tipo selecionado na tela de login */
+    let loginType = 'aluno';
+
+    /* ============================================
+       HISTÓRICO DE NAVEGAÇÃO (setas voltar/avançar)
+       Pilha simples de telas visitadas para permitir
+       navegar para frente e para trás dentro do app.
+       ============================================ */
+    const navHistory = [];      // telas já visitadas
+    let   navIndex   = -1;      // posição atual no histórico
+    let   navLock    = false;   // evita re-empilhar ao usar as setas
+
+    function pushHistory(screenId) {
+      if (navLock) return;
+      // Se navegamos a partir do meio, descarta o "futuro"
+      if (navIndex < navHistory.length - 1) {
+        navHistory.splice(navIndex + 1);
+      }
+      // Evita duplicar a mesma tela seguida
+      if (navHistory[navIndex] !== screenId) {
+        navHistory.push(screenId);
+        navIndex++;
+      }
+      updateNavArrows();
+    }
+
+    function navBack() {
+      if (navIndex <= 0) return;
+      navIndex--;
+      navLock = true;
+      switchScreen(navHistory[navIndex]);
+      navLock = false;
+      updateNavArrows();
+    }
+
+    function navForward() {
+      if (navIndex >= navHistory.length - 1) return;
+      navIndex++;
+      navLock = true;
+      switchScreen(navHistory[navIndex]);
+      navLock = false;
+      updateNavArrows();
+    }
+
+    function updateNavArrows() {
+      document.querySelectorAll('.nav-arrow').forEach(btn => {
+        const label = btn.getAttribute('aria-label') || '';
+        if (label.includes('Voltar')) {
+          btn.disabled = navIndex <= 0;
+        } else if (label.includes('Avançar')) {
+          btn.disabled = navIndex >= navHistory.length - 1;
+        }
+      });
+    }
+
+
+    /* ============================================
+       NAVEGAÇÃO ENTRE TELAS
+       ============================================ */
+
+    /**
+     * switchScreen(screenId)
+     * Alterna a tela visível e atualiza o estado da navbar.
+     * Telas sem bottom-nav: login, register, forgot.
+     */
+    function switchScreen(screenId) {
+      /* Registra no histórico (a menos que estejamos voltando/avançando) */
+      pushHistory(screenId);
+      /* Ocultar telas de auth (sem bottom-nav) */
+      const authScreens = ['login', 'register', 'forgot'];
+
+      /* Mostrar/ocultar bottom-nav dependendo da tela */
+      const bottomNav = document.getElementById('bottom-nav');
+      if (authScreens.includes(screenId)) {
+        bottomNav.style.display = 'none';
+        /* Ocultar todas as outras telas */
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        /* Ocultar telas de auth */
+        authScreens.forEach(id => {
+          const el = document.getElementById('screen-' + id);
+          if (el) el.style.display = 'none';
+        });
+        /* Mostrar tela solicitada */
+        const target = document.getElementById('screen-' + screenId);
+        if (target) {
+          target.style.display = 'flex';
+          target.classList.add('active');
+        }
+        return;
+      }
+
+      /* Para telas principais: ocultar auth, mostrar bottom-nav */
+      bottomNav.style.display = 'flex';
+      authScreens.forEach(id => {
+        const el = document.getElementById('screen-' + id);
+        if (el) { el.style.display = 'none'; el.classList.remove('active'); }
+      });
+
+      /* Trocar tela ativa */
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + screenId);
+      if (target) target.classList.add('active');
+
+      /* Atualizar estado ativo dos botões da navbar */
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+        btn.removeAttribute('aria-current');
+      });
+      const activeNav = document.getElementById('nav-' + screenId);
+      if (activeNav) {
+        activeNav.classList.add('active');
+        activeNav.setAttribute('aria-current', 'page');
+      }
+
+      /* Atualizar conteúdo dinâmico conforme a tela */
+      if (screenId === 'home') updateHomeScreen();
+      if (screenId === 'courses') updateCoursesScreen();
+      if (screenId === 'profile') updateProfileScreen();
+
+      /* Scroll para o topo ao trocar de tela */
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+    /* ============================================
+       ATUALIZAÇÃO DA HOME
+       ============================================ */
+
+    /* Saudação baseada na hora do dia */
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Bom dia';
+      if (hour < 18) return 'Boa tarde';
+      return 'Boa noite';
+    }
+
+    /* Atualiza conteúdo da tela inicial */
+    function updateHomeScreen() {
+      const greetingText = document.getElementById('home-greeting-text');
+      const sub = document.getElementById('home-greeting-sub');
+      const inProgress = document.getElementById('course-in-progress');
+      const noCourse = document.getElementById('no-course-card');
+      const aside = document.getElementById('home-aside');
+
+      if (currentUser) {
+        /* Usuário logado */
+        greetingText.textContent = `${getGreeting()}, ${currentUser.nome.split(' ')[0]}!`;
+        sub.textContent = 'Bem-vindo de volta à sua jornada de aprendizagem.';
+
+        /* Encontrar o curso com maior progresso */
+        const prog = currentUser.progresso;
+        const best = Object.entries(prog)
+          .filter(([, v]) => v > 0)
+          .sort((a, b) => b[1] - a[1])[0];
+
+        if (best) {
+          /* Exibir card de curso em progresso */
+          inProgress.style.display = 'block';
+          noCourse.style.display = 'none';
+          const courseData = courses.find(c => c.id === best[0]);
+          document.getElementById('progress-course-name').textContent =
+            (courseData ? courseData.icon + ' ' : '') + (courseData ? courseData.name : best[0]);
+          document.getElementById('progress-bar-fill').style.width = best[1] + '%';
+          document.getElementById('progress-percent').textContent = best[1] + '%';
+          /* Atualizar aria-valuenow para acessibilidade */
+          document.querySelector('#course-in-progress .progress-bar-wrap')
+            .setAttribute('aria-valuenow', best[1]);
+        } else {
+          inProgress.style.display = 'none';
+          noCourse.style.display = 'block';
+          setSuggestedCourse();
+        }
+
+        /* Exibir aside de desempenho */
+        aside.style.display = 'block';
+        updatePerformanceSummary();
+
+      } else {
+        /* Visitante não logado */
+        greetingText.textContent = `${getGreeting()}!`;
+        sub.textContent = 'Explore nossas disciplinas ou faça login para acompanhar seu progresso.';
+        inProgress.style.display = 'none';
+        noCourse.style.display = 'block';
+        aside.style.display = 'none';
+        setSuggestedCourse();
+      }
+
+      /* Renderizar mini-cards dos cursos */
+      renderCourseMiniCards();
+
+      /* Atualiza o cartão do usuário no canto superior direito */
+      updateUserChip();
+    }
+
+    /* Atualiza o cartão de usuário (canto superior direito da home) */
+    function updateUserChip() {
+      const chip = document.getElementById('home-user-chip');
+      if (!chip) return;
+      if (!currentUser) {
+        chip.style.display = 'none';
+        return;
+      }
+      chip.style.display = 'flex';
+      const initials = currentUser.nome.split(' ').map(n => n[0]).slice(0,2).join('');
+      document.getElementById('user-chip-avatar').textContent = initials;
+      document.getElementById('user-chip-name').textContent = currentUser.nome;
+      document.getElementById('user-chip-role').textContent = capitalize(currentUser.tipo);
+      document.getElementById('user-chip-matricula').textContent =
+        'Matrícula: ' + currentUser.matricula;
+    }
+
+    /* Define aleatoriamente o curso sugerido */
+    function setSuggestedCourse() {
+      const random = courses[Math.floor(Math.random() * courses.length)];
+      document.getElementById('suggested-icon').textContent = random.icon;
+      document.getElementById('suggested-course').textContent = random.name;
+    }
+
+    /* Renderiza grid de mini-cards dos cursos */
+    function renderCourseMiniCards() {
+      const grid = document.querySelector('.courses-mini-grid');
+      if (!grid) return;
+      grid.innerHTML = courses.map(c => {
+        const prog = currentUser ? (currentUser.progresso[c.id] || 0) : null;
+        return `
+          <div class="course-mini-card"
+               style="background:${c.color};"
+               onclick="switchScreen('courses')"
+               role="button" tabindex="0"
+               aria-label="${c.name}">
+            <span class="course-mini-icon">${c.icon}</span>
+            <span class="course-mini-name">${c.name}</span>
+            ${prog !== null ? `<span style="font-size:0.7rem;color:rgba(255,255,255,0.9);font-weight:600;">${prog}%</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* Resumo de desempenho no aside da home */
+    function updatePerformanceSummary() {
+      if (!currentUser) return;
+      const prog = currentUser.progresso;
+      const total = Object.values(prog).reduce((a, b) => a + b, 0);
+      const avg = Math.round(total / Object.keys(prog).length);
+      document.getElementById('home-performance-summary').innerHTML = `
+        <p style="font-size:0.82rem; margin-bottom:8px; color:var(--color-text);">
+          <strong>Progresso médio:</strong> ${avg}%
+        </p>
+        <div class="progress-bar-wrap" style="margin-bottom:12px;"
+             role="progressbar" aria-valuenow="${avg}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar-fill" style="width:${avg}%"></div>
+        </div>
+        ${courses.map(c => `
+          <div style="display:flex; justify-content:space-between; font-size:0.78rem;
+                      margin-bottom:4px; color:var(--color-text-secondary);">
+            <span>${c.icon} ${c.name}</span>
+            <span style="font-weight:600; color:${c.color}">${prog[c.id] || 0}%</span>
+          </div>
+        `).join('')}
+      `;
+    }
+
+
+    /* ============================================
+       ATUALIZAÇÃO DA TELA DE CURSOS
+       ============================================ */
+    function updateCoursesScreen() {
+      const guestNotice = document.getElementById('guest-notice');
+
+      if (!currentUser) {
+        /* Visitante: exibe aviso e oculta barras de progresso */
+        guestNotice.style.display = 'block';
+        courses.forEach(c => {
+          const bar = document.getElementById('prog-' + c.id);
+          const pct = document.getElementById('pct-' + c.id);
+          if (bar) bar.style.width = '0%';
+          if (pct) pct.textContent = 'Faça login';
+        });
+      } else {
+        /* Usuário logado: exibe progresso real */
+        guestNotice.style.display = 'none';
+        courses.forEach(c => {
+          const val = currentUser.progresso[c.id] || 0;
+          const bar = document.getElementById('prog-' + c.id);
+          const pct = document.getElementById('pct-' + c.id);
+          if (bar) bar.style.width = val + '%';
+          if (pct) pct.textContent = val + '%';
+          /* Atualizar medalhas baseado no progresso */
+          updateMedal(c.id, val);
+        });
+      }
+    }
+
+    /* Atualiza o estado da medalha conforme progresso */
+    function updateMedal(courseId, progress) {
+      const card = document.querySelector(`.course-${courseId} .medals-row`);
+      if (!card) return;
+      let medal = '🏅 Iniciante';
+      let locked = true;
+      if (progress >= 25) { medal = '🥉 Aprendiz'; locked = false; }
+      if (progress >= 50) { medal = '🥈 Avançado'; locked = false; }
+      if (progress >= 100) { medal = '🥇 Concluído'; locked = false; }
+      card.innerHTML = `<span class="medal ${locked ? 'medal-locked' : ''}">${medal}</span>`;
+    }
+
+
+    /* ============================================
+       ATUALIZAÇÃO DA TELA DE PERFIL
+       ============================================ */
+    function updateProfileScreen() {
+      /* Ocultar todos os painéis ao abrir o perfil */
+      document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('active'));
+
+      const logged = document.getElementById('profile-logged');
+      const guest  = document.getElementById('profile-guest');
+
+      if (!currentUser) {
+        logged.style.display = 'none';
+        guest.style.display = 'block';
+        return;
+      }
+
+      logged.style.display = 'block';
+      guest.style.display = 'none';
+
+      /* Atualizar avatar e cabeçalho */
+      const initials = currentUser.nome.split(' ').map(n => n[0]).slice(0,2).join('');
+      document.getElementById('profile-avatar').textContent = initials;
+      document.getElementById('profile-name').textContent = currentUser.nome;
+      document.getElementById('profile-role-badge').textContent =
+        capitalize(currentUser.tipo);
+      document.getElementById('profile-matricula').textContent =
+        'Matrícula: ' + currentUser.matricula;
+
+      /* Exibir menu correto por tipo de usuário */
+      ['aluno','professor','coordenador','administrador'].forEach(tipo => {
+        const menu = document.getElementById('menu-' + tipo);
+        if (menu) menu.style.display = currentUser.tipo === tipo ? 'flex' : 'none';
+      });
+
+      /* Preencher dados do usuário nos painéis */
+      fillUserData();
+
+      /* Mostrar botão de certificado se concluiu algum curso */
+      const hasConcluded = Object.values(currentUser.progresso).some(v => v >= 100);
+      const certBtn = document.getElementById('btn-certificado');
+      if (certBtn) certBtn.style.display = hasConcluded ? 'flex' : 'none';
+
+      /* Mostrar botão "Adicionar ao Calendário" para inst. */
+      const addCalBtn = document.getElementById('btn-add-calendar-wrap');
+      if (addCalBtn) {
+        addCalBtn.style.display =
+          ['professor','coordenador','administrador'].includes(currentUser.tipo) ? 'block' : 'none';
+      }
+
+      /* Gerar calendário */
+      generateCalendar();
+
+      /* Atualiza lista de disciplinas gerenciáveis (depende do tipo + atribuições) */
+      renderManageCourses();
+    }
+
+    /* ============================================
+       PAINEL "GERENCIAR CURSOS"
+       Professor só pode editar disciplinas atribuídas.
+       Coordenador / Administrador editam todas.
+       ============================================ */
+    function renderManageCourses() {
+      const grid     = document.getElementById('manage-courses-grid');
+      const empty    = document.getElementById('no-disciplines-msg');
+      const btnAdd   = document.getElementById('btn-add-course');
+      if (!grid || !currentUser) return;
+
+      // Define quais disciplinas o usuário pode editar
+      let allowed = [];
+      if (currentUser.tipo === 'coordenador' || currentUser.tipo === 'administrador') {
+        allowed = courses.map(c => c.id);
+        btnAdd.style.display = 'inline-flex';
+      } else if (currentUser.tipo === 'professor') {
+        allowed = currentUser.disciplinasAtribuidas || [];
+        btnAdd.style.display = 'none';
+      }
+
+      // Sem disciplinas → mostra mensagem e oculta a grade
+      if (allowed.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      // Renderiza apenas as disciplinas permitidas
+      grid.style.display = 'grid';
+      empty.style.display = 'none';
+      grid.innerHTML = allowed.map(id => {
+        const c = courses.find(x => x.id === id);
+        if (!c) return '';
+        return `
+          <div class="admin-card" onclick="showToast('Abrir gestão: ${c.name}')">
+            <div class="admin-icon">${c.icon}</div>
+            <h4>${c.name}</h4>
+            <p>25 aulas</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* Preenche os campos de "Meus Dados" */
+    function fillUserData() {
+      if (!currentUser) return;
+      const set = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val || '—';
+      };
+      set('dados-nome',      currentUser.nome);
+      set('dados-email',     currentUser.email);
+      set('dados-cpf',       currentUser.cpf);
+      set('dados-telefone',  currentUser.telefone);
+      set('dados-endereco',  currentUser.endereco);
+      set('dados-cidade',    currentUser.cidade + ' / ' + currentUser.estado);
+      set('dados-cep',       currentUser.cep);
+      set('dados-matricula', currentUser.matricula);
+      set('dados-tipo',      capitalize(currentUser.tipo));
+    }
+
+
+    /* ============================================
+       PAINÉIS DE DETALHE NO PERFIL
+       ============================================ */
+
+    /** Exibe um painel de detalhe e oculta o menu */
+    function showPanel(panelId) {
+      /* Ocultar todos os painéis */
+      document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('active'));
+      /* Ocultar menus */
+      document.querySelectorAll('.profile-menu').forEach(m => m.style.display = 'none');
+      document.getElementById('profile-header') &&
+        (document.querySelector('.profile-header').style.display = 'none');
+
+      const panel = document.getElementById(panelId);
+      if (panel) panel.classList.add('active');
+    }
+
+    /** Volta ao menu principal do perfil */
+    function hidePanel(panelId) {
+      const panel = document.getElementById(panelId);
+      if (panel) panel.classList.remove('active');
+
+      /* Reexibir cabeçalho e menu correto */
+      const ph = document.querySelector('.profile-header');
+      if (ph) ph.style.display = 'flex';
+
+      if (currentUser) {
+        const menu = document.getElementById('menu-' + currentUser.tipo);
+        if (menu) menu.style.display = 'flex';
+      }
+    }
+
+    /** Troca de tab dentro de um painel */
+    function switchTab(tabId, btn) {
+      /* Ocultar todos os tab-panels irmãos */
+      const panels = btn.closest('.tabs').nextElementSibling.parentElement
+        .querySelectorAll('.tab-panel');
+      panels.forEach(p => p.classList.remove('active'));
+      btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+    }
+
+
+    /* ============================================
+       AUTENTICAÇÃO
+       ============================================ */
+
+    /** Seleciona tipo de usuário na tela de login */
+    function selectUserType(type) {
+      loginType = type;
+      document.getElementById('btn-tipo-aluno').classList.toggle('selected', type === 'aluno');
+      document.getElementById('btn-tipo-inst').classList.toggle('selected', type === 'instituicao');
+      document.getElementById('btn-tipo-aluno').setAttribute('aria-pressed', type === 'aluno');
+      document.getElementById('btn-tipo-inst').setAttribute('aria-pressed', type === 'instituicao');
+      /* Exibir campo de cargo apenas para instituição */
+      document.getElementById('cargo-group').style.display =
+        type === 'instituicao' ? 'block' : 'none';
+    }
+
+    /** Processa o formulário de login */
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const senha = document.getElementById('login-senha').value;
+      const cargo = document.getElementById('login-cargo').value;
+      const errorEl = document.getElementById('login-error');
+
+      /* Busca usuário no "banco de dados" simulado */
+      let user = usersDB.find(u => u.email === email && u.senha === senha);
+
+      /* Verificação de tipo */
+      if (user) {
+        if (loginType === 'aluno' && user.tipo !== 'aluno') user = null;
+        if (loginType === 'instituicao' && user.tipo === 'aluno') user = null;
+        if (loginType === 'instituicao' && cargo && user && user.tipo !== cargo) user = null;
+      }
+
+      if (!user) {
+        errorEl.classList.add('visible');
+        return;
+      }
+      errorEl.classList.remove('visible');
+
+      /* Login bem-sucedido */
+      currentUser = user;
+      showToast(`Bem-vindo(a), ${user.nome.split(' ')[0]}! ✅`);
+      switchScreen('home');
+    }
+
+    /** Processa o formulário de cadastro */
+    function handleRegister(e) {
+      e.preventDefault();
+      const senha   = document.getElementById('reg-senha').value;
+      const confirma = document.getElementById('reg-confirma-senha').value;
+      const errorEl  = document.getElementById('senha-mismatch-error');
+
+      /* Validação de senhas */
+      if (senha !== confirma) {
+        errorEl.classList.add('visible');
+        return;
+      }
+      errorEl.classList.remove('visible');
+
+      /* Simula número de matrícula baseado na contagem de usuários do mesmo tipo */
+      const tipo = document.getElementById('reg-tipo').value;
+      const count = usersDB.filter(u => u.tipo === tipo).length + 1;
+      const prefix = { aluno:'ALU', professor:'PROF', coordenador:'COORD', administrador:'ADM' }[tipo] || 'USR';
+      const matricula = `${prefix}-${String(count).padStart(3,'0')}`;
+
+      /* Cria novo usuário (em produção: enviar para API/banco SQL) */
+      const newUser = {
+        id: usersDB.length + 1,
+        tipo,
+        email:    document.getElementById('reg-email').value.trim(),
+        senha,
+        nome:     document.getElementById('reg-nome').value.trim(),
+        cpf:      document.getElementById('reg-cpf').value.trim(),
+        telefone: document.getElementById('reg-telefone').value.trim(),
+        endereco: document.getElementById('reg-endereco').value.trim(),
+        cidade:   document.getElementById('reg-cidade').value.trim(),
+        estado:   document.getElementById('reg-estado').value,
+        cep:      document.getElementById('reg-cep').value.trim(),
+        matricula,
+        // Todo aluno novo começa zerado em todas as matérias (progresso, notas e frequência)
+        progresso:  { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
+        notas:      { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
+        frequencia: { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
+        // Professores começam sem disciplinas atribuídas
+        disciplinasAtribuidas: tipo === 'professor' ? [] : undefined
+      };
+
+      usersDB.push(newUser);
+      currentUser = newUser;
+      showToast(`Cadastro realizado! Matrícula: ${matricula} ✅`);
+      switchScreen('home');
+    }
+
+    /** Processa recuperação de senha (placeholder — integrar com backend) */
+    function handleForgot(e) {
+      e.preventDefault();
+      const val = document.getElementById('forgot-input').value.trim();
+      if (!val) return;
+      showToast('Desculpe, esse recurso ainda não está disponível! ⚠️');
+      /* Em produção: chamar API de recuperação de senha */
+    }
+
+    /** Abre o modal de confirmação de logoff */
+    function logout() {
+      document.getElementById('modal-logout').classList.add('active');
+    }
+
+    /** Confirma e efetua o logoff */
+    function confirmLogout() {
+      closeModal('modal-logout');
+      currentUser = null;
+      showToast('Você saiu da conta. Até logo! 👋');
+      switchScreen('home');
+    }
+
+
+    /* ============================================
+       MODAL DO CERTIFICADO
+       ============================================ */
+    function openCertModal() {
+      if (!currentUser) return;
+      /* Preencher dados do certificado */
+      document.getElementById('cert-name').textContent = currentUser.nome;
+      /* Encontrar o curso concluído */
+      const concluded = Object.entries(currentUser.progresso).find(([,v]) => v >= 100);
+      const courseData = concluded
+        ? courses.find(c => c.id === concluded[0])
+        : courses[0];
+      document.getElementById('cert-course').textContent =
+        courseData ? courseData.name : '—';
+      document.getElementById('cert-hours').textContent = '120';
+      document.getElementById('cert-time').textContent = '45h 30min';
+      document.getElementById('cert-date').textContent =
+        'Data de emissão: ' + new Date().toLocaleDateString('pt-BR');
+
+      document.getElementById('modal-certificado').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function downloadCertificate() {
+      showToast('Certificado salvo! (integrar com html2canvas/jsPDF em produção) 📄');
+      closeModal('modal-certificado');
+    }
+
+    /* Fechar modal ao clicar fora */
+    document.getElementById('modal-certificado').addEventListener('click', function(e) {
+      if (e.target === this) closeModal('modal-certificado');
+    });
+
+
+    /* ============================================
+       ABERTURA DE CURSO
+       ============================================ */
+    function openCourse(courseId) {
+      if (!currentUser) {
+        showToast('Faça login para acessar este curso! 🔒');
+        setTimeout(() => switchScreen('login'), 1000);
+        return;
+      }
+      const course = courses.find(c => c.id === courseId);
+      currentCourseId = courseId;
+      // Atualiza o título da tela de atividades
+      document.getElementById('activities-course-title').textContent =
+        course ? (course.icon + ' ' + course.name) : 'Disciplina';
+      document.getElementById('activities-course-sub').textContent =
+        'Escolha uma unidade abaixo para ver as atividades.';
+      // Renderiza unidades e atividades (placeholders ou vindos do backend C#)
+      renderActivities(courseId);
+      switchScreen('activities');
+    }
+
+    /* ============================================
+       RENDERIZAÇÃO DE UNIDADES + ATIVIDADES
+       Os textos abaixo são placeholders para você
+       substituir facilmente ("Unidade 1", "Atividade 1"...).
+       ============================================ */
+    function renderActivities(courseId) {
+      const container = document.getElementById('activities-list');
+      if (!container) return;
+
+      // Estrutura padrão (placeholder): 5 unidades x 5 atividades
+      // Para alterar nomes, edite os arrays abaixo OU carregue de
+      // um backend (ver loadActivitiesFromCSharp mais abaixo).
+      const unidades = activitiesByCourse[courseId] || defaultActivities();
+
+      container.innerHTML = unidades.map((u, i) => `
+        <section class="unit-block">
+          <h3 class="unit-title">${u.titulo}</h3>
+          <div class="activity-list">
+            ${u.atividades.map((a, j) => `
+              <button class="activity-item" onclick="openActivity('${courseId}', ${i}, ${j})">
+                <span class="activity-name">${a}</span>
+                <span class="activity-arrow">›</span>
+              </button>
+            `).join('')}
+          </div>
+        </section>
+      `).join('');
+    }
+
+    /* Estrutura placeholder padrão (caso backend não responda) */
+    function defaultActivities() {
+      const unidades = [];
+      for (let u = 1; u <= 5; u++) {
+        const ativ = [];
+        for (let a = 1; a <= 5; a++) ativ.push(`Atividade ${a} (Placeholder)`);
+        unidades.push({ titulo: `Unidade ${u} (Placeholder)`, atividades: ativ });
+      }
+      return unidades;
+    }
+
+    /* Cache local de atividades por disciplina (preenchido pelo backend C#) */
+    const activitiesByCourse = {};
+    let currentCourseId = null;
+
+    /* Abre uma atividade específica
+       (em produção: redirecionar para tela de questão / fetch no C#) */
+    function openActivity(courseId, unitIdx, actIdx) {
+      showToast(`Abrindo Unidade ${unitIdx+1} · Atividade ${actIdx+1}`);
+      // TODO: integrar com backend C#:
+      // fetch(`/api/activities/${courseId}/${unitIdx}/${actIdx}`)
+      //   .then(r => r.json())
+      //   .then(question => { /* renderizar a questão */ });
+    }
+
+
+    /* ============================================
+       CALENDÁRIO (geração visual)
+       ============================================ */
+    function generateCalendar() {
+      const now = new Date();
+      const year  = now.getFullYear();
+      const month = now.getMonth();
+      const today = now.getDate();
+
+      /* Nome do mês em português */
+      const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                      'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+      document.getElementById('cal-month-title').textContent =
+        `${months[month]} ${year}`;
+
+      const grid = document.getElementById('calendar-grid');
+      if (!grid) return;
+
+      /* Dias da semana */
+      const dayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+      let html = dayNames.map(d =>
+        `<div class="cal-day-name" role="columnheader" aria-label="${d}">${d}</div>`
+      ).join('');
+
+      /* Primeiro dia do mês e total de dias */
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      /* Células vazias antes do dia 1 */
+      for (let i = 0; i < firstDay; i++) {
+        html += `<div class="cal-day empty" aria-hidden="true"></div>`;
+      }
+
+      /* Dias do mês */
+      for (let d = 1; d <= totalDays; d++) {
+        const isToday = d === today;
+        html += `<div class="cal-day ${isToday ? 'today' : ''}"
+                      role="gridcell"
+                      aria-label="${d} de ${months[month]}"
+                      ${isToday ? 'aria-current="date"' : ''}
+                      onclick="showToast('Dia ${d}: nenhum evento cadastrado.')">
+                   ${d}
+                 </div>`;
+      }
+      grid.innerHTML = html;
+    }
+
+
+    /* ============================================
+       MÁSCARAS DE INPUT (melhoria de usabilidade)
+       ============================================ */
+
+    /** Máscara de CEP: 00000-000 */
+    function maskCEP(input) {
+      let v = input.value.replace(/\D/g, '').slice(0,8);
+      if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5);
+      input.value = v;
+    }
+
+    /** Máscara de Telefone: (00) 00000-0000 */
+    function maskTel(input) {
+      let v = input.value.replace(/\D/g, '').slice(0,11);
+      if (v.length > 10) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,6)}-${v.slice(6)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      input.value = v;
+    }
+
+    /** Máscara de CPF: 000.000.000-00 */
+    function maskCPF(input) {
+      let v = input.value.replace(/\D/g, '').slice(0,11);
+      if (v.length > 9) v = `${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6,9)}-${v.slice(9)}`;
+      else if (v.length > 6) v = `${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6)}`;
+      else if (v.length > 3) v = `${v.slice(0,3)}.${v.slice(3)}`;
+      input.value = v;
+    }
+
+
+    /* ============================================
+       TOAST — mensagem rápida para o usuário
+       ============================================ */
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+
+    /* ============================================
+       UTILITÁRIOS
+       ============================================ */
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    /* Suporte a teclado nos cards clicáveis (acessibilidade) */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const el = e.target;
+        if (el.getAttribute('role') === 'button') {
+          e.preventDefault();
+          el.click();
+        }
+      }
+    });
+
+    /* Fechar modal com Escape */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => {
+          m.classList.remove('active');
+        });
+      }
+    });
+
+
+    /* ============================================
+       INICIALIZAÇÃO
+       Executado ao carregar a página
+       ============================================ */
+    (function init() {
+      /* Exibir a tela inicial com conteúdo padrão */
+      updateHomeScreen();
+
+      /* Garantir que bottom-nav esteja visível */
+      document.getElementById('bottom-nav').style.display = 'flex';
+
+      /* Inicia o relógio ("São HH:MM") e mantém atualizado */
+      startClock();
+
+      /* Tenta carregar as atividades do backend C# (silencioso se offline) */
+      loadActivitiesFromCSharp();
+    })();
+
+    /* ============================================
+       RELÓGIO DA TELA INICIAL
+       Mostra "São HH:MM" sempre atualizado.
+       ============================================ */
+    function startClock() {
+      const el = document.getElementById('home-clock');
+      if (!el) return;
+      const tick = () => {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        el.textContent = `São ${hh}:${mm}`;
+      };
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    /* ============================================================
+       INTEGRAÇÃO COM BACKEND
+       ------------------------------------------------------------
+       Esta seção está RESERVADA para conectar o site a:
+         (1) um banco SQL (logins, dados de usuários, progresso)
+         (2) um arquivo C# que fornece as questões das atividades
+
+       Basta apontar BACKEND_BASE_URL para o seu servidor.
+       Os endpoints esperados estão documentados abaixo.
+       ============================================================ */
+    const BACKEND_BASE_URL = ''; // ex.: 'https://meu-servidor.com'
+
+    /* (1) AUTENTICAÇÃO / BANCO SQL
+       Endpoints esperados (você implementa no servidor):
+         POST  {BACKEND_BASE_URL}/api/login        body: { email, senha }
+         POST  {BACKEND_BASE_URL}/api/register     body: { ...dadosUsuario }
+         POST  {BACKEND_BASE_URL}/api/forgot       body: { emailOuCpf }
+         GET   {BACKEND_BASE_URL}/api/user/:id
+       Tabelas SQL sugeridas:
+         users(id, tipo, nome, email, senha_hash, cpf, telefone,
+               endereco, cidade, estado, cep, matricula, criado_em)
+         progresso(user_id, curso_id, percentual, atualizado_em)
+         avisos(id, titulo, corpo, data, autor_id)
+    */
+    async function apiLogin(email, senha) {
+      if (!BACKEND_BASE_URL) return null; // backend não configurado
+      const r = await fetch(`${BACKEND_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha })
+      });
+      return r.ok ? r.json() : null;
+    }
+
+    async function apiRegister(dados) {
+      if (!BACKEND_BASE_URL) return null;
+      const r = await fetch(`${BACKEND_BASE_URL}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      });
+      return r.ok ? r.json() : null;
+    }
+
+    /* (2) ATIVIDADES — vindas de um arquivo C#
+       Endpoint esperado:
+         GET {BACKEND_BASE_URL}/api/activities
+       Resposta esperada (JSON):
+         {
+           "ads":     [ { "titulo": "Unidade 1", "atividades": ["Atividade 1", ...] }, ... ],
+           "cc":      [ ... ],
+           "design":  [ ... ],
+           "ti":      [ ... ],
+           "ec": [ ... ],
+           "adm":     [ ... ]
+         }
+       O arquivo C# (ex.: ActivitiesController.cs) deve servir essas
+       perguntas/atividades. Enquanto não houver backend, o site usa
+       os placeholders de defaultActivities().
+    */
+    async function loadActivitiesFromCSharp() {
+      if (!BACKEND_BASE_URL) return; // sem backend ainda
+      try {
+        const r = await fetch(`${BACKEND_BASE_URL}/api/activities`);
+        if (!r.ok) return;
+        const data = await r.json();
+        Object.assign(activitiesByCourse, data);
+        // Se a tela de atividades estiver aberta, re-renderiza
+        if (currentCourseId) renderActivities(currentCourseId);
+      } catch (e) {
+        // Falha silenciosa — mantém os placeholders
+        console.warn('Backend de atividades indisponível, usando placeholders.');
+      }
+    }
+
+  </script>
+
+
+  <script>
+    /* Esconde a splash screen após o carregamento */
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var s = document.getElementById('splash-screen');
+        if (s) { s.classList.add('hidden'); setTimeout(function(){ s.remove(); }, 500); }
+      }, 800);
+    });
+  </script>
+</body>
+</html>
