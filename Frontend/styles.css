@@ -1,0 +1,1623 @@
+/* =============================================
+   EducaTech - Plataforma Educacional
+   Arquivo: styles.css
+   Descrição: Estilos globais da plataforma
+   ============================================= */
+
+/* --- Font Stack Educacional ---
+   Nunito: legibilidade e amigabilidade em textos de interface
+   Merriweather: excelente para leitura de conteúdo acadêmico
+   DM Sans: moderna e clara para textos secundários/UI
+*/
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* =============================================
+   VARIÁVEIS CSS (Design Tokens)
+   ============================================= */
+:root {
+  /* Paleta principal baseada em #7C3AED */
+  --color-primary:        #7C3AED;
+  --color-primary-dark:   #6D28D9;
+  --color-primary-darker: #5B21B6;
+  --color-primary-light:  #A78BFA;
+  --color-primary-pale:   #F3F4F6;
+
+  /* Cores de apoio */
+  --color-accent:         #6D28D9;
+  --color-accent-dark:    #4C1D95;
+
+  /* Neutros */
+  --color-bg:             #F3F4F6;
+  --color-surface:        #ffffff;
+  --color-surface-2:      #F3F4F6;
+  --color-border:         #DDD6FE;
+  --color-text:           #1F2937;
+  --color-text-secondary: #4B5563;
+  --color-text-muted:     #9CA3AF;
+
+  /* Cores por curso */
+  --course-ads:     #4f8ef7;   /* Análise e Desenvolvimento - Azul técnico */
+  --course-cc:      #7c5cbf;   /* Ciência da Computação - Roxo profundo */
+  --course-design:  #f97316;   /* Design Gráfico - Laranja criativo */
+  --course-ti:      #16a34a;   /* T.I - Verde tecnologia */
+  --course-ec: #2c0000;   /* Engenharia da Computação - Vermelho escuro institucional */
+  --course-adm:     #0e7490;   /* Administração - Teal corporativo */
+
+  /* Sombras */
+  --shadow-sm:  0 1px 3px rgba(124,58,237,0.10);
+  --shadow-md:  0 4px 16px rgba(124,58,237,0.14);
+  --shadow-lg:  0 8px 32px rgba(124,58,237,0.18);
+
+  /* Tipografia */
+  --font-ui:      'DM Sans', 'Nunito', sans-serif;
+  --font-heading: 'Nunito', 'DM Sans', sans-serif;
+  --font-body:    'Merriweather', 'DM Sans', serif;
+
+  /* Espaçamento */
+  --spacing-xs:   4px;
+  --spacing-sm:   8px;
+  --spacing-md:   16px;
+  --spacing-lg:   24px;
+  --spacing-xl:   32px;
+  --spacing-2xl:  48px;
+
+  /* Border Radius */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-full: 9999px;
+
+  /* Transições */
+  --transition: 0.22s ease;
+
+  /* Altura da navbar inferior */
+  --nav-height: 68px;
+}
+
+/* =============================================
+   RESET E BASE
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  /* Evita sobreposição com navbar fixa inferior */
+  padding-bottom: var(--nav-height);
+  line-height: 1.6;
+}
+
+/* Foco acessível */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover { color: var(--color-accent-dark); }
+
+/* Imagens responsivas */
+img { max-width: 100%; height: auto; display: block; }
+
+/* =============================================
+   TIPOGRAFIA
+   ============================================= */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); }
+h2 { font-size: clamp(1.2rem, 3vw, 1.6rem); }
+h3 { font-size: clamp(1rem, 2.5vw, 1.2rem); }
+
+p {
+  font-family: var(--font-ui);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* =============================================
+   LAYOUT PRINCIPAL
+   ============================================= */
+/* Container central limitando largura */
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Cada "tela" ocupa toda a altura visível */
+.screen {
+  display: none;          /* Telas ficam ocultas por padrão */
+  min-height: calc(100vh - var(--nav-height));
+  padding: var(--spacing-lg) 0 var(--spacing-xl);
+  animation: fadeIn 0.3s ease;
+}
+
+/* Tela ativa é exibida */
+.screen.active { display: block; }
+
+/* Animação de entrada suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   CABEÇALHO / LOGO
+   ============================================= */
+/* Logo grande centralizada — apenas na tela inicial */
+.logo-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+}
+
+.logo-center .logo-img {
+  height: 72px;
+  width: auto;
+}
+
+/* Logo pequena no canto superior esquerdo — demais telas */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo-small {
+  height: 36px;
+  width: auto;
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  letter-spacing: -0.5px;
+}
+
+.logo-text span { color: var(--color-primary-darker); }
+
+/* =============================================
+   BARRA DE NAVEGAÇÃO INFERIOR (GLOBAL)
+   ============================================= */
+/* A barra fica sempre visível para acesso rápido */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--color-surface);
+  border-top: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  z-index: 200;
+  box-shadow: 0 -2px 12px rgba(124,58,237,0.10);
+}
+
+/* Cada item da nav */
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color var(--transition), background var(--transition);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+/* Hover effect */
+.nav-item:hover {
+  color: var(--color-accent-dark);
+  background: var(--color-surface-2);
+}
+
+/* Estado ativo */
+.nav-item.active {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Ícone SVG dentro dos botões de nav */
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+  transition: transform var(--transition);
+}
+
+.nav-item:hover svg { transform: translateY(-2px); }
+
+/* =============================================
+   BOTÕES GLOBAIS
+   ============================================= */
+/* Botão primário */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+/* Hover escurece o tom — sem glow */
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:active {
+  background: var(--color-primary-darker);
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-primary-dark);
+}
+.btn-secondary:hover {
+  background: var(--color-primary-pale);
+  border-color: var(--color-accent);
+  color: var(--color-accent-dark);
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.btn-danger:hover {
+  background: #fca5a5;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+}
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* =============================================
+   CARDS GENÉRICOS
+   ============================================= */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* =============================================
+   TELA INICIAL (HOME)
+   ============================================= */
+#screen-home .greeting {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+#screen-home .greeting-sub {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Card do curso em andamento */
+.course-continue-card {
+  background: linear-gradient(135deg, var(--color-primary-pale) 0%, var(--color-surface) 100%);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.course-continue-card .course-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-xs);
+}
+
+.course-continue-card h3 {
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Barra de progresso */
+.progress-bar-wrap {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  height: 10px;
+  overflow: hidden;
+  margin: var(--spacing-sm) 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary-darker));
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* Card "Sem curso" — incentivo */
+.no-course-card {
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-primary-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.no-course-card .course-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.no-course-card p {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Seção de resumo de cursos na home */
+.home-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Grid de mini-cards de cursos na home */
+.courses-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.course-mini-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: filter var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.course-mini-card:hover {
+  filter: brightness(0.90);
+  transform: translateY(-2px);
+}
+
+.course-mini-card .course-mini-icon { font-size: 1.5rem; }
+.course-mini-card .course-mini-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* =============================================
+   TELA DE CURSOS
+   ============================================= */
+#screen-courses .screen-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xl);
+  padding-top: var(--spacing-sm);
+}
+
+/* Grid de cards de disciplinas */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Card de cada disciplina */
+.discipline-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow var(--transition), transform var(--transition);
+  background: var(--color-surface);
+  border: 1px solid transparent;
+}
+
+.discipline-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+/* Cabeçalho colorido do card */
+.discipline-card-header {
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.discipline-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.discipline-card-header h3 {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.discipline-card-header p {
+  color: rgba(255,255,255,0.80);
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+/* Corpo do card */
+.discipline-card-body {
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+}
+
+/* Cores por disciplina */
+.course-ads  .discipline-card-header { background: var(--course-ads); }
+.course-cc   .discipline-card-header { background: var(--course-cc); }
+.course-design .discipline-card-header { background: var(--course-design); }
+.course-ti   .discipline-card-header { background: var(--course-ti); }
+.course-ec .discipline-card-header { background: var(--course-ec); }
+.course-adm  .discipline-card-header { background: var(--course-adm); }
+
+/* Bordas coloridas sutis nos cards */
+.course-ads  { border-color: var(--course-ads); }
+.course-cc   { border-color: var(--course-cc); }
+.course-design { border-color: var(--course-design); }
+.course-ti   { border-color: var(--course-ti); }
+.course-ec { border-color: var(--course-ec); }
+.course-adm  { border-color: var(--course-adm); }
+
+/* =============================================
+   SISTEMA DE MEDALHAS
+   ============================================= */
+.medals-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-sm);
+}
+
+.medal {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fef9c3;
+  border: 1px solid #fde047;
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #854d0e;
+}
+
+.medal-locked {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+
+/* =============================================
+   TELA DE LOGIN / CADASTRO
+   ============================================= */
+#screen-login, #screen-register, #screen-forgot {
+  display: none;
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--color-primary-pale) 0%, var(--color-bg) 60%);
+  padding: var(--spacing-2xl) var(--spacing-md);
+  animation: fadeIn 0.3s ease;
+}
+
+#screen-login.active, #screen-register.active, #screen-forgot.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Box central do login */
+.auth-box {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-box .auth-logo {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.auth-box h2 {
+  text-align: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.auth-box .auth-sub {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Seleção de tipo de usuário no login */
+.user-type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.user-type-btn {
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: border-color var(--transition), background var(--transition), color var(--transition);
+}
+
+.user-type-btn:hover {
+  border-color: var(--color-primary-dark);
+  background: var(--color-primary-pale);
+  color: var(--color-accent-dark);
+}
+
+.user-type-btn.selected {
+  border-color: var(--color-accent);
+  background: var(--color-primary-pale);
+  color: var(--color-accent);
+}
+
+.user-type-btn .type-icon { font-size: 1.4rem; margin-bottom: 4px; }
+
+/* Formulários */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Inputs */
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  color: var(--color-text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 3px rgba(155, 246, 255, 0.35);
+}
+
+select.form-control {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%234a7a84'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+/* Grid de 2 colunas para o formulário de cadastro */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--spacing-md);
+}
+
+.form-grid-2 .form-group { margin-bottom: var(--spacing-md); }
+
+/* Mensagem de erro */
+.form-error {
+  color: #dc2626;
+  font-size: 0.78rem;
+  margin-top: 4px;
+  display: none;
+}
+.form-error.visible { display: block; }
+
+/* Link auxiliar */
+.auth-link {
+  text-align: center;
+  margin-top: var(--spacing-md);
+  font-size: 0.84rem;
+  color: var(--color-text-muted);
+}
+.auth-link a { color: var(--color-accent); font-weight: 600; }
+.auth-link a:hover { color: var(--color-accent-dark); }
+
+/* Divisor */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* =============================================
+   TELA DE PERFIL
+   ============================================= */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, var(--color-primary-pale), var(--color-surface));
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-primary);
+}
+
+.avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+}
+
+.profile-header-info h3 { font-size: 1.1rem; margin-bottom: 2px; }
+.profile-header-info .role-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--color-primary);
+  color: var(--color-accent-dark);
+}
+
+/* Menu de opções do perfil */
+.profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  width: 100%;
+  text-align: left;
+}
+
+.profile-menu-item:hover {
+  background: var(--color-primary-pale);
+  border-color: var(--color-primary-dark);
+  transform: translateX(4px);
+}
+
+.profile-menu-item .menu-icon { font-size: 1.3rem; }
+.profile-menu-item .menu-arrow {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+/* Painel de detalhes do perfil */
+.profile-panel {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+.profile-panel.active { display: block; }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-accent);
+  font-size: 1.2rem;
+  padding: var(--spacing-xs);
+  transition: color var(--transition);
+}
+.back-btn:hover { color: var(--color-accent-dark); }
+
+/* Tabelas de dados */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+/* Tags de nota */
+.grade-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.grade-a  { background: #dcfce7; color: #166534; }
+.grade-b  { background: #dbeafe; color: #1e40af; }
+.grade-c  { background: #fef9c3; color: #854d0e; }
+.grade-d  { background: #fee2e2; color: #991b1b; }
+
+/* Aviso card */
+.notice-card {
+  background: var(--color-surface-2);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+.notice-card .notice-date { font-size: 0.75rem; color: var(--color-text-muted); }
+.notice-card .notice-title { font-weight: 700; color: var(--color-text); margin-bottom: 2px; }
+.notice-card .notice-body { font-size: 0.85rem; color: var(--color-text-secondary); }
+
+/* Texto informando sem avisos */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl) 0;
+  color: var(--color-text-muted);
+}
+.empty-state .empty-icon { font-size: 2.5rem; margin-bottom: var(--spacing-sm); }
+
+/* =============================================
+   MODAL DE CERTIFICADO
+   ============================================= */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,40,50,0.55);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 560px;
+  width: 100%;
+  padding: var(--spacing-xl);
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--transition);
+  line-height: 1;
+  padding: 4px;
+}
+.modal-close:hover { color: var(--color-text); }
+
+/* Template de certificado */
+#certificate-preview {
+  border: 3px double var(--color-primary-darker);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  background: linear-gradient(160deg, #F3F4F6, #ffffff);
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+#certificate-preview::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--color-primary);
+  border-radius: calc(var(--radius-lg) - 4px);
+  pointer-events: none;
+}
+
+#certificate-preview .cert-logo {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-xs);
+}
+
+#certificate-preview .cert-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: var(--spacing-sm) 0;
+}
+
+#certificate-preview .cert-body {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+#certificate-preview .cert-name {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-accent-dark);
+  display: block;
+  margin: var(--spacing-sm) 0;
+}
+
+#certificate-preview .cert-course {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+#certificate-preview .cert-footer {
+  margin-top: var(--spacing-lg);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-sm);
+}
+
+/* =============================================
+   PAINEL ADMINISTRATIVO (Coord/Prof)
+   ============================================= */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.admin-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.admin-card:hover {
+  background: var(--color-primary-pale);
+  border-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.admin-card .admin-icon { font-size: 2rem; margin-bottom: var(--spacing-sm); }
+.admin-card h4 { font-size: 0.9rem; color: var(--color-text); }
+.admin-card p  { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 2px; }
+
+/* =============================================
+   TOAST / NOTIFICAÇÃO RÁPIDA
+   ============================================= */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--spacing-md));
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--color-text);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 600;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* =============================================
+   TABS (sub-abas dentro de perfil)
+   ============================================= */
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--color-border);
+  padding: 3px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--radius-md) - 2px);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: background var(--transition), color var(--transition);
+}
+
+.tab-btn:hover {
+  background: rgba(255,255,255,0.5);
+  color: var(--color-text);
+}
+
+.tab-btn.active {
+  background: var(--color-surface);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* =============================================
+   CHIP / TAG GENÉRICO
+   ============================================= */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--color-primary-pale);
+  color: var(--color-accent-dark);
+  border: 1px solid var(--color-primary);
+}
+
+/* =============================================
+   CALENDÁRIO (placeholder visual)
+   ============================================= */
+.calendar-placeholder {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.calendar-placeholder .cal-month {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-md);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.cal-day-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  padding: 4px 0;
+}
+
+.cal-day {
+  font-size: 0.8rem;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background var(--transition);
+}
+
+.cal-day:hover { background: var(--color-primary-pale); }
+
+.cal-day.today {
+  background: var(--color-primary);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.cal-day.empty { visibility: hidden; }
+
+.cal-day.has-event {
+  position: relative;
+}
+.cal-day.has-event::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* =============================================
+   RESPONSIVIDADE — MEDIA QUERIES
+   ============================================= */
+
+/* --- Tablet e maiores (min 600px) --- */
+@media (min-width: 600px) {
+  /* Grid de cursos com 2 colunas fixas */
+  .courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Admin grid 3 colunas */
+  .admin-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Nav com ícone maior */
+  .nav-item {
+    font-size: 0.78rem;
+  }
+
+  /* Registro em grid 2 colunas */
+  .form-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- Desktop (min 900px) --- */
+@media (min-width: 900px) {
+  :root {
+    --nav-height: 60px;
+  }
+
+  /* Grid de cursos 3 colunas */
+  .courses-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Layout de home com sidebar */
+  .home-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-xl);
+    align-items: start;
+  }
+
+  /* Nav horizontal com texto maior */
+  .nav-item {
+    font-size: 0.82rem;
+  }
+
+  /* Auth box centralizado */
+  .auth-box {
+    max-width: 460px;
+  }
+}
+
+/* --- Mobile pequeno (max 400px) --- */
+@media (max-width: 400px) {
+  .user-type-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-mini-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-item span {
+    font-size: 0.65rem;
+  }
+}
+
+/* --- Imagens/logos com media query ---
+   Em telas grandes exibe logo maior centralizada.
+   Em mobile exibe logo compacta no topo. */
+@media (max-width: 599px) {
+  .logo-center .logo-img {
+    height: 52px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+}
+
+/* =============================================
+   UTILITÁRIOS
+   ============================================= */
+.text-center { text-align: center; }
+.text-muted  { color: var(--color-text-muted); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* =============================================
+   IMPRESSÃO — oculta navegação
+   ============================================= */
+@media print {
+  .bottom-nav,
+  .page-header,
+  .modal-overlay > :not(#certificate-preview) {
+    display: none !important;
+  }
+
+  body { background: #fff; padding: 0; }
+}
+
+
+/* =============================================
+   TELA INICIAL — CENTRALIZADO
+   ============================================= */
+#screen-home .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+#screen-home .greeting,
+#screen-home .greeting-sub,
+#screen-home .home-section-title {
+  text-align: center;
+  width: 100%;
+}
+#screen-home .home-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-lg);
+}
+#screen-home .home-layout > div,
+#screen-home .home-layout > aside {
+  width: 100%;
+  max-width: 640px;
+}
+#screen-home .courses-mini-grid {
+  justify-content: center;
+}
+
+/* Relógio "São HH:MM" */
+.home-clock {
+  /* Mostrado ao lado do "Bom dia! 👋" (preto, mesmo tamanho de leitura) */
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 1.8rem;
+  color: #000000;
+  letter-spacing: 0.3px;
+  margin-left: var(--spacing-sm);
+}
+
+/* Saudação em preto, com emoji e relógio na mesma linha */
+#screen-home .greeting {
+  color: #000000;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+#screen-home .greeting .greeting-emoji { font-size: 1.4rem; }
+
+/* =============================================
+   CABEÇALHO: SETAS DE NAVEGAÇÃO + LOGO CLICÁVEL
+   ============================================= */
+.page-header {
+  justify-content: space-between;
+}
+.home-header {
+  /* Cabeçalho específico da home: mantém setas, logo central e cartão do usuário */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Setas voltar/avançar */
+.nav-arrows {
+  display: flex;
+  gap: 4px;
+}
+.nav-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-accent-dark);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), opacity var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-arrow:hover:not(:disabled) {
+  background: var(--color-primary-pale);
+  color: var(--color-accent);
+}
+.nav-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Logo EducaTech como botão (clicável → home) */
+.logo-btn {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+.logo-btn:hover { background: var(--color-primary-pale); }
+.logo-btn .logo-text { display: inline-block; }
+
+/* Cartão do usuário no canto superior direito da home */
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  max-width: 220px;
+}
+.user-chip-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.user-chip-info {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-ui);
+  line-height: 1.2;
+  min-width: 0;
+}
+.user-chip-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-chip-role {
+  font-size: 0.7rem;
+  color: var(--color-accent-dark);
+  font-weight: 600;
+}
+.user-chip-matricula {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+}
+@media (max-width: 599px) {
+  .user-chip { padding: 4px 8px; max-width: 150px; }
+  .user-chip-avatar { width: 30px; height: 30px; font-size: 0.75rem; }
+  .user-chip-name { font-size: 0.74rem; }
+  .user-chip-role, .user-chip-matricula { font-size: 0.62rem; }
+  .nav-arrow { width: 30px; height: 30px; font-size: 1.2rem; }
+}
+
+/* =============================================
+   TELA DE ATIVIDADES (Unidades + Atividades)
+   ============================================= */
+.unit-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+.unit-title {
+  font-size: 1.05rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px var(--spacing-md);
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  text-align: left;
+}
+.activity-item:hover {
+  background: var(--color-primary-light);
+  transform: translateX(2px);
+}
+.activity-arrow {
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+/* Botão voltar dentro do header */
+.page-header .back-btn {
+  background: none;
+  border: none;
+  color: var(--color-accent-dark);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+}
+.page-header .back-btn:hover { background: var(--color-surface-2); }
+
+
+/* ---- Paleta EducaTech ---- */
+:root {
+  --color-secondary: #6D28D9;
+  --color-tertiary:  #A78BFA;
+  --color-neutral:   #F3F4F6;
+}
+
+/* Rodapé de copyright (login + splash) */
+.auth-copyright {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  opacity: 0.55;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+#screen-login { position: relative; min-height: 100vh; padding-bottom: 64px; }
+
+/* Splash screen */
+.splash-screen {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  transition: opacity .4s ease;
+}
+.splash-screen.hidden { opacity: 0; pointer-events: none; }
+.splash-inner { text-align: center; color: #fff; }
+.splash-logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+}
+.splash-logo span { color: var(--color-tertiary); }
+.splash-spinner {
+  width: 36px; height: 36px; margin: 18px auto 0;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: splash-spin 0.9s linear infinite;
+}
+@keyframes splash-spin { to { transform: rotate(360deg); } }
