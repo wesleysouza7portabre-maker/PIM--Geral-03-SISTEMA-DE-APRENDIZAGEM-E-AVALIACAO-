@@ -21,12 +21,31 @@
   <!-- Splash screen exibida ao carregar a aplicação -->
   <div id="splash-screen" class="splash-screen" role="status" aria-label="Carregando">
     <div class="splash-inner">
-      <!-- LOGO AQUI (splash): substitua por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
-      <div class="splash-logo">Educa<span>Tech</span></div>
-      <div class="splash-spinner" aria-hidden="true"></div>
+      <!-- LOGO PRINCIPAL: substitua o arquivo em assets/educatech-logo.png para trocar a marca -->
+      <img src="assets/educatech-logo.png" alt="EducaTech" class="splash-logo-img" />
+      <p class="splash-subtitle">SISTEMA DE AVALIAÇÃO E APRENDIZADO INTEGRADO</p>
+      <div class="splash-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
-    <footer class="auth-copyright">© 2026 TechVagas</footer>
+    <footer class="auth-copyright">© 2026 EducaTech</footer>
   </div>
+
+  <!-- ================================================
+       MENU HAMBURGER (drawer global)
+       Acessível pelo botão ☰ na barra de navegação.
+       ================================================ -->
+  <aside id="hamburger-drawer" class="hamburger-drawer" aria-hidden="true">
+    <div class="hamburger-backdrop" onclick="closeHamburger()"></div>
+    <nav class="hamburger-panel" aria-label="Menu principal">
+      <button class="hamburger-close" onclick="closeHamburger()" aria-label="Fechar menu">✕</button>
+      <ul class="hamburger-list">
+        <li><button onclick="hamburgerGo('profile')"><span>👤</span> Meu Perfil</button></li>
+        <li><button onclick="hamburgerGo('privacidade')"><span>🔒</span> Política de Privacidade</button></li>
+        <li><button onclick="hamburgerGo('quem-somos')"><span>🏢</span> Quem Somos?</button></li>
+        <li><button onclick="hamburgerGo('ajuda')"><span>❓</span> Ajuda</button></li>
+        <li id="hamburger-logout-item"><button class="hamburger-logout" onclick="hamburgerLogout()"><span>🚪</span> Sair</button></li>
+      </ul>
+    </nav>
+  </aside>
 
   <!-- ================================================
        TOAST de feedback rápido (acessível)
@@ -39,104 +58,93 @@
        ================================================ -->
   <main id="screen-home" class="screen active">
 
-    <!-- Cabeçalho da home: logo clicável (volta à home) + setas de navegação + cartão do usuário -->
-    <header class="page-header home-header">
-      <!-- Setas de navegação (voltar / avançar no histórico de telas) -->
-      <div class="nav-arrows" aria-label="Navegação de páginas">
-        <button class="nav-arrow" id="btn-nav-back" onclick="navBack()" aria-label="Voltar página">‹</button>
-        <button class="nav-arrow" id="btn-nav-fwd" onclick="navForward()" aria-label="Avançar página">›</button>
-      </div>
-
-      <!-- LOGO AQUI: para usar uma imagem, troque a div interna por: <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
-      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text">Educa<span>Tech</span></span>
-      </button>
-
-      <!-- Cartão do usuário no canto superior direito (visível só quando logado) -->
-      <div class="user-chip" id="home-user-chip" style="display:none;" aria-label="Usuário logado">
-        <div class="user-chip-avatar" id="user-chip-avatar">U</div>
-        <div class="user-chip-info">
-          <span class="user-chip-name" id="user-chip-name">—</span>
-          <span class="user-chip-role" id="user-chip-role">—</span>
-          <span class="user-chip-matricula" id="user-chip-matricula">—</span>
-        </div>
-      </div>
-    </header>
+    <!-- Topo global: hamburger + setas | logo central | cartão do usuário -->
+    <div class="global-nav-slot" data-global-nav></div>
 
     <div class="container">
 
       <!-- Saudação personalizada ao usuário (muda conforme a hora do dia) -->
       <section aria-labelledby="greeting-heading">
-        <h1 class="greeting" id="home-greeting">
-          <span id="home-greeting-text">Boa tarde!</span>
+      <h1 class="greeting" id="home-greeting">
+          <span id="home-greeting-text">Boa tarde</span>,
+          <span class="greeting-name" id="home-greeting-name">aluno(a)</span>!
           <span class="greeting-emoji" aria-hidden="true">👋</span>
-          <span class="home-clock" id="home-clock" aria-live="polite">São 00:00</span>
         </h1>
-        <p class="greeting-sub" id="home-greeting-sub">Bem-vindo à melhor plataforma de aprendizagem à distância.</p>
+        <p class="home-clock" id="home-clock" aria-live="polite">São 00:00</p>
+        <p class="greeting-sub" id="home-greeting-sub">Bem-vindo(a) de volta à sua jornada de aprendizagem.</p>
       </section>
 
-      <!-- ---- LAYOUT DE DOIS PAINÉIS EM DESKTOP ---- -->
-      <div class="home-layout">
+      <!-- ---- DASHBOARD: 2 colunas (esquerda: ações | direita: desempenho) ---- -->
+      <div class="dash-grid">
 
-        <!-- PAINEL PRINCIPAL -->
-        <div>
+        <!-- COLUNA ESQUERDA -->
+        <div class="dash-col-main">
 
-          <!-- Seção: curso em andamento OU incentivo para começar -->
-          <section aria-label="Curso em progresso" class="mb-lg">
+          <!-- Linha 1: sugestão (esquerda) + 2ª caixa lateral (direita) -->
+          <div class="dash-row-top">
+            <!-- Caixa: Que tal começar por (matéria)? -->
+            <section class="suggestion-card" aria-label="Sugestão de matéria">
+              <div class="suggestion-icon" id="suggested-icon" aria-hidden="true">📚</div>
+              <div class="suggestion-text">
+                <p class="suggestion-label">Sugestão para você</p>
+                <p id="suggested-text">Que tal começar por <strong id="suggested-course">Análise e Desenvolvimento de Sistemas</strong>?</p>
+                <button class="btn btn-primary btn-sm" onclick="switchScreen('courses')">Ver Disciplinas</button>
+              </div>
+            </section>
 
-            <!-- Exibido quando o usuário ESTÁ fazendo um curso -->
-            <div class="course-continue-card" id="course-in-progress" style="display:none;">
+            <!-- Caixa: Continuar de onde parei (visível só com progresso) -->
+            <section class="continue-card" id="course-in-progress" style="display:none;" aria-label="Curso em andamento">
               <p class="course-label">Continuar de onde parei</p>
-              <h3 id="progress-course-name">Nome do Curso</h3>
-              <!-- Barra de progresso com valor acessível -->
-              <div class="progress-bar-wrap" role="progressbar"
-                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                   aria-label="Progresso do curso">
+              <h3 id="progress-course-name">—</h3>
+              <div class="progress-bar-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
               </div>
               <div class="flex-between">
                 <span class="progress-text" id="progress-percent">0%</span>
-                <button class="btn btn-primary btn-sm" onclick="showToast('Abrindo curso...')">
-                  Continuar ▶
-                </button>
+                <button class="btn btn-primary btn-sm" onclick="switchScreen('courses')">Continuar ▶</button>
               </div>
-            </div>
+            </section>
+          </div>
 
-            <!-- Exibido quando o usuário NÃO tem curso em andamento -->
-            <div class="no-course-card" id="no-course-card">
-              <!-- Ícone/imagem do curso sugerido (atualizado via JS) -->
-              <!-- IMAGEM AQUI (sugestão de curso): substitua o emoji por <img src="images/curso-sugerido.png" alt="Curso sugerido" /> -->
-              <div class="course-icon" id="suggested-icon">📚</div>
-              <p id="suggested-text">Que tal começar por <strong id="suggested-course">Análise e Desenvolvimento de Sistemas</strong>?</p>
-              <button class="btn btn-primary"
-                onclick="switchScreen('courses')">
-                Ver Disciplinas
+          <!-- DISCIPLINAS DISPONÍVEIS -->
+          <section aria-labelledby="quick-access-heading" class="quick-access">
+            <div class="flex-between mb-sm">
+              <p class="home-section-title" id="quick-access-heading">DISCIPLINAS DISPONÍVEIS</p>
+              <button class="link-more" onclick="switchScreen('courses')" aria-label="Ver todas as disciplinas">
+                Ver todas <span aria-hidden="true">›</span>
               </button>
             </div>
+            <div class="quick-access-row" id="quick-access-row"></div>
           </section>
 
-          <!-- Seção: visão geral dos cursos disponíveis -->
-          <section aria-labelledby="courses-overview-heading">
-            <p class="home-section-title" id="courses-overview-heading">Disciplinas disponíveis</p>
-            <div class="courses-mini-grid">
-              <!-- Mini-cards gerados pelo JavaScript abaixo -->
-            </div>
-          </section>
+          <!-- Caixas: Certificados e Comunidade -->
+          <div class="dash-row-bottom">
+            <section class="info-card" aria-label="Certificados">
+              <h3>🎓 Certificados</h3>
+              <p id="cert-count-text">Você não possui nenhum novo certificado</p>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Abrindo certificados...')">Ver certificados</button>
+            </section>
+            <section class="info-card" aria-label="Comunidade">
+              <h3>💬 Comunidade</h3>
+              <p>Acesse o fórum e troque experiências com outros <strong id="community-count">0</strong> alunos</p>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Abrindo comunidade...')">Acessar fórum</button>
+            </section>
+          </div>
 
-        </div><!-- /painel principal -->
+        </div>
 
-        <!-- PAINEL LATERAL (resumo rápido — apenas desktop via CSS grid) -->
-        <aside aria-label="Resumo do perfil" id="home-aside" style="display:none;">
-          <div class="card">
-            <h3 class="mb-md" style="font-size:0.9rem;">Meu Desempenho</h3>
-            <!-- Dados preenchidos via JS para usuários logados -->
-            <div id="home-performance-summary">
-              <p style="font-size:0.82rem;">Faça login para ver seu progresso.</p>
-            </div>
+        <!-- COLUNA DIREITA: Desempenho -->
+        <aside class="dash-col-side" aria-label="Desempenho do usuário">
+          <div class="performance-card">
+            <h3>📊 Meu Desempenho</h3>
+            <div id="home-performance-summary"></div>
+            <button class="btn btn-primary btn-block" id="btn-relatorio-completo" onclick="switchScreen('relatorio')">
+              Ver Relatório Detalhado
+            </button>
           </div>
         </aside>
 
-      </div><!-- /home-layout -->
+      </div>
 
     </div><!-- /container -->
   </main>
@@ -149,20 +157,12 @@
   <main id="screen-courses" class="screen">
 
     <!-- Cabeçalho padrão: setas de navegação + logo (clicável → home) -->
-    <header class="page-header">
-      <div class="nav-arrows" aria-label="Navegação de páginas">
-        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
-        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
-      </div>
-      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
-      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text">Educa<span>Tech</span></span>
-      </button>
-    </header>
+    <div class="global-nav-slot" data-global-nav></div>
 
     <div class="container">
       <!-- Título obrigatório conforme requisito -->
       <h1 class="screen-title" style="margin-top:var(--spacing-lg);">Disciplinas</h1>
+      <p class="screen-subtitle">Explore sua jornada acadêmica. Cada disciplina foi cuidadosamente selecionada para construir sua base técnica e profissional.</p>
 
       <!-- Grid de cards de disciplinas -->
       <section aria-label="Lista de disciplinas">
@@ -299,29 +299,15 @@
             </div>
           </article>
 
-          <!-- 6. Administração — Teal corporativo -->
-          <article class="discipline-card course-adm"
-                   onclick="openCourse('adm')"
+          <!-- 6. Card "Explorar Novas Matérias" (placeholder convite) -->
+          <article class="discipline-card explore-card"
+                   onclick="showToast('Em breve: novas matérias na plataforma! 🚀')"
                    role="button" tabindex="0"
-                   aria-label="Administração">
-            <div class="discipline-card-header">
-              <div class="discipline-icon" aria-hidden="true">📊</div>
-              <div>
-                <h3>Administração</h3>
-                <p>25 aulas · 5 módulos</p>
-              </div>
-            </div>
-            <div class="discipline-card-body">
-              <div class="progress-bar-wrap" role="progressbar"
-                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar-fill" id="prog-adm" style="width:0%; background: var(--course-adm);"></div>
-              </div>
-              <div class="flex-between mt-sm">
-                <span class="progress-text" id="pct-adm" style="color:var(--course-adm);">0%</span>
-                <div class="medals-row">
-                  <span class="medal medal-locked">🏅 Iniciante</span>
-                </div>
-              </div>
+                   aria-label="Explorar novas matérias">
+            <div class="explore-inner">
+              <div class="explore-icon" aria-hidden="true">+</div>
+              <h3>Explorar Novas Matérias</h3>
+              <p>Descubra novos caminhos na tecnologia</p>
             </div>
           </article>
 
@@ -358,23 +344,22 @@
        partir do arquivo C# (ver função loadActivitiesFromCSharp).
        ================================================ -->
   <main id="screen-activities" class="screen">
-    <header class="page-header">
-      <div class="nav-arrows" aria-label="Navegação de páginas">
-        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
-        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
-      </div>
-      <!-- LOGO AQUI: substitua por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
-      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text">Educa<span>Tech</span></span>
-      </button>
-    </header>
+    <div class="global-nav-slot" data-global-nav></div>
 
     <div class="container">
-      <h1 class="screen-title" id="activities-course-title" style="margin-top:var(--spacing-lg);">Disciplina</h1>
-      <p id="activities-course-sub" style="margin-bottom:var(--spacing-lg);">Selecione uma atividade para começar.</p>
+      <!-- Cabeçalho da disciplina: selo + título + ações -->
+      <div class="activities-head">
+        <span class="activities-badge">🎓 Graduação em Tecnologia</span>
+        <h1 class="screen-title" id="activities-course-title">Disciplina</h1>
+        <p id="activities-course-sub">Escolha uma unidade abaixo para ver as atividades.</p>
+        <div class="activities-actions">
+          <button class="btn btn-primary" onclick="continueLastActivity()">▶ Continuar de onde parou</button>
+          <button class="btn btn-secondary" onclick="restartCourse()">⏪ Recomeçar</button>
+        </div>
+      </div>
 
       <!-- Lista de unidades + atividades é gerada via JS (função renderActivities) -->
-      <div id="activities-list" aria-label="Lista de unidades e atividades"></div>
+      <div id="activities-list" class="units-grid" aria-label="Lista de unidades e atividades"></div>
     </div>
   </main>
 
@@ -385,16 +370,7 @@
        ================================================ -->
   <main id="screen-profile" class="screen">
 
-    <header class="page-header">
-      <div class="nav-arrows" aria-label="Navegação de páginas">
-        <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
-        <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
-      </div>
-      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
-      <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text">Educa<span>Tech</span></span>
-      </button>
-    </header>
+    <div class="global-nav-slot" data-global-nav></div>
 
     <div class="container">
 
@@ -419,8 +395,8 @@
             <span class="menu-icon">👤</span> Meus Dados
             <span class="menu-arrow">›</span>
           </button>
-          <button class="profile-menu-item" onclick="showPanel('panel-notas')">
-            <span class="menu-icon">📋</span> Minhas Notas
+          <button class="profile-menu-item" onclick="switchScreen('relatorio')">
+            <span class="menu-icon">📊</span> Relatório de Desempenho
             <span class="menu-arrow">›</span>
           </button>
           <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
@@ -435,6 +411,10 @@
                   onclick="openCertModal()"
                   id="btn-certificado" style="display:none;">
             <span class="menu-icon">🎓</span> Emitir Certificado
+            <span class="menu-arrow">›</span>
+          </button>
+          <button class="profile-menu-item" onclick="switchScreen('ajuda')">
+            <span class="menu-icon">❓</span> Ajuda
             <span class="menu-arrow">›</span>
           </button>
           <button class="profile-menu-item btn-danger"
@@ -595,12 +575,6 @@
               </tr>
               <tr>
                 <td>Engenharia da Computação</td>
-                <td>0%</td>
-                <td><span class="grade-badge grade-d">—</span></td>
-                <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
-              </tr>
-              <tr>
-                <td>Administração</td>
                 <td>0%</td>
                 <td><span class="grade-badge grade-d">—</span></td>
                 <td><span class="chip" style="background:#f3f4f6; border-color:#d1d5db; color:#6b7280;">Não iniciado</span></td>
@@ -824,19 +798,154 @@
 
 
   <!-- ================================================
+       TELA: RELATÓRIO DE DESEMPENHO
+       ================================================ -->
+  <main id="screen-relatorio" class="screen">
+    <div class="global-nav-slot" data-global-nav></div>
+    <div class="container">
+      <h1 class="screen-title" style="margin-top:var(--spacing-lg);">Relatório de Desempenho</h1>
+      <div id="relatorio-content"></div>
+    </div>
+  </main>
+
+  <!-- ================================================
+       TELA: POLÍTICA DE PRIVACIDADE
+       ================================================ -->
+  <main id="screen-privacidade" class="screen">
+    <div class="global-nav-slot" data-global-nav></div>
+    <div class="container">
+      <article class="text-page">
+        <h1>Política de privacidade</h1>
+        <p>A <strong>EducaTech</strong> respeita a sua privacidade e está comprometida com a proteção dos dados pessoais de alunos, professores e demais usuários da plataforma.</p>
+        <p>Coletamos apenas os dados necessários para a prestação do serviço educacional, como nome, e-mail, CPF, telefone, endereço e desempenho acadêmico. Esses dados são utilizados exclusivamente para fins de matrícula, acompanhamento de progresso, emissão de certificados e comunicação institucional.</p>
+        <p>Em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>, garantimos ao titular o direito de acessar, corrigir, atualizar e solicitar a exclusão de seus dados pessoais a qualquer momento.</p>
+        <p>Os dados são armazenados em ambiente seguro e não são compartilhados com terceiros sem o consentimento expresso do usuário, salvo nos casos previstos em lei.</p>
+        <p>Em caso de dúvidas, entre em contato com o nosso Encarregado de Dados pelo e-mail <em>privacidade@educatech.com.br</em>.</p>
+      </article>
+    </div>
+  </main>
+
+  <!-- ================================================
+       TELA: QUEM SOMOS?
+       ================================================ -->
+  <main id="screen-quem-somos" class="screen">
+    <div class="global-nav-slot" data-global-nav></div>
+    <div class="container">
+      <article class="text-page">
+        <h1>Quem somos?</h1>
+        <p>A <strong>EducaTech</strong> é uma plataforma educacional brasileira dedicada a transformar o aprendizado por meio da tecnologia. Nascemos com o propósito de democratizar o acesso ao ensino de qualidade, oferecendo cursos, avaliações e acompanhamento personalizado para alunos de todo o país.</p>
+        <p>Nossa missão é unir educação e inovação, criando experiências de aprendizagem envolventes, acessíveis e alinhadas às demandas do mercado.</p>
+        <p>Acreditamos que aprender deve ser simples, contínuo e prazeroso — por isso, investimos em uma plataforma intuitiva, responsiva e construída com foco no aluno.</p>
+      </article>
+    </div>
+  </main>
+
+  <!-- ================================================
+       TELA: AJUDA
+       ================================================ -->
+  <main id="screen-ajuda" class="screen">
+    <div class="global-nav-slot" data-global-nav></div>
+    <div class="container">
+      <article class="text-page">
+        <h1>Ajuda</h1>
+        <h2 class="faq-subtitle">Perguntas frequentes</h2>
+        <ul class="faq-list">
+          <li><details><summary>1. Como faço minha matrícula na plataforma?</summary><p>Clique em "Matricule-se" na tela de login, preencha o formulário e confirme seu cadastro.</p></details></li>
+          <li><details><summary>2. Esqueci minha senha. O que faço?</summary><p>Na tela de login, clique em "Esqueci minha senha" e siga as instruções enviadas para o seu e-mail.</p></details></li>
+          <li><details><summary>3. Como acompanho meu desempenho?</summary><p>Acesse "Meu perfil" e clique em "Relatório de Desempenho" para visualizar suas notas, progresso e frequência.</p></details></li>
+          <li><details><summary>4. Como emito um certificado?</summary><p>Após concluir 100% de uma disciplina, vá em "Meu perfil" e clique em "Emitir Certificado".</p></details></li>
+          <li><details><summary>5. Como entro em contato com o suporte?</summary><p>Envie um e-mail para <em>suporte@educatech.com.br</em>. Respondemos em até 48h úteis.</p></details></li>
+        </ul>
+      </article>
+    </div>
+  </main>
+
+  <!-- ================================================
+       TELA: QUIZ (Atividade 3 / Quiz de Fixação)
+       ================================================ -->
+  <main id="screen-quiz" class="screen">
+    <div class="global-nav-slot" data-global-nav></div>
+    <div class="container">
+
+      <!-- Trilha de navegação -->
+      <nav class="quiz-breadcrumb" aria-label="Trilha de navegação">
+        <a onclick="switchScreen('home')">Dashboard</a>
+        <span aria-hidden="true">›</span>
+        <a onclick="switchScreen('courses')">Cursos</a>
+        <span aria-hidden="true">›</span>
+        <a onclick="openCourse('ads')">Análise e Desenvolvimento de Sistemas</a>
+        <span aria-hidden="true">›</span>
+        <strong>Unidade 1</strong>
+      </nav>
+
+      <!-- Cabeçalho: título + progresso (questão X de N) -->
+      <div class="quiz-header">
+        <div class="quiz-header-row">
+          <div>
+            <h1 id="quiz-activity-title">Atividade 3: Quiz de Fixação</h1>
+            <p class="quiz-subject" id="quiz-subject-name">Análise e Desenvolvimento de Sistemas</p>
+          </div>
+          <div class="quiz-topbar">
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quiz-progress-fill" style="width:20%"></div></div>
+            <p class="quiz-progress-label">Questão <span id="quiz-current">1</span> de <span id="quiz-total">5</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-grid">
+        <section class="quiz-question-card" aria-label="Pergunta atual">
+          <div class="quiz-q-meta">
+            <span class="quiz-q-badge">Questão <strong id="quiz-q-num">1</strong></span>
+            <span class="quiz-q-points">Pontuação: <strong>2.0</strong></span>
+          </div>
+          <p class="quiz-statement" id="quiz-statement">—</p>
+          <ul class="quiz-options" id="quiz-options"></ul>
+        </section>
+
+        <!-- Mapa do Quiz: navegação por questão + tempo + finalizar -->
+        <aside class="quiz-side">
+          <div class="card quiz-map-card">
+            <p class="quiz-map-title">Mapa do Quiz</p>
+            <div class="quiz-map-grid" id="quiz-map-grid"></div>
+            <div class="quiz-nav-row">
+              <button class="btn btn-secondary btn-sm" id="quiz-prev" onclick="quizPrev()">← Questão Anterior</button>
+              <button class="btn btn-secondary btn-sm" id="quiz-next" onclick="quizNext()">Próxima Questão →</button>
+            </div>
+            <div class="quiz-timer-row">
+              <span class="quiz-side-label">Tempo Restante:</span>
+              <span class="quiz-side-value timer" id="quiz-timer">30:00</span>
+            </div>
+            <button class="btn btn-finish btn-block" onclick="openModal('modal-finish-quiz')">Finalizar Tentativa</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de confirmação para finalizar tentativa -->
+  <div id="modal-finish-quiz" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal modal-confirm" style="max-width:420px;">
+      <div class="confirm-icon" aria-hidden="true">📝</div>
+      <h3 class="confirm-title">Finalizar Tentativa?</h3>
+      <p class="confirm-text">Tem certeza que quer finalizar sua tentativa? Esta ação não poderá ser desfeita e suas respostas serão enviadas para correção.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-finish-quiz')">Cancelar</button>
+        <button class="btn btn-primary" onclick="finishQuiz()">Finalizar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================
        TELA DE LOGIN
        ================================================ -->
   <main id="screen-login" role="main" aria-label="Login">
 
-    <!-- Logo centralizada no topo do login -->
+    <!-- Logo do login: para alterar, substitua o arquivo assets/educatech-logo.png -->
     <div class="auth-logo" style="margin-bottom:var(--spacing-lg);">
-      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
       <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text" style="font-size:2rem;">Educa<span>Tech</span></span>
+        <img src="assets/educatech-logo.png" alt="EducaTech" class="auth-logo-img" />
       </button>
-      <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:4px;">
-        Plataforma de Avaliação e Aprendizagem
-      </p>
+      <p class="auth-tagline">SISTEMA DE AVALIAÇÃO E APRENDIZADO INTEGRADO</p>
     </div>
 
     <div class="auth-box">
@@ -880,7 +989,10 @@
         </div>
 
         <div class="form-group">
-          <label for="login-senha">Senha</label>
+          <div class="label-row">
+            <label for="login-senha">Senha</label>
+            <a href="#" class="forgot-inline" onclick="switchScreen('forgot'); return false;">Esqueci minha senha</a>
+          </div>
           <input type="password" class="form-control" id="login-senha"
                  placeholder="••••••••"
                  autocomplete="current-password"
@@ -894,11 +1006,6 @@
         </button>
       </form>
 
-      <!-- Link para recuperação de senha -->
-      <div class="auth-link">
-        <a href="#" onclick="switchScreen('forgot'); return false;">Esqueci minha senha</a>
-      </div>
-
       <div class="divider">ou</div>
 
       <!-- Link para cadastro -->
@@ -907,7 +1014,7 @@
         <a href="#" onclick="switchScreen('register'); return false;">Matricule-se</a>
       </div>
     </div>
-    <footer class="auth-copyright">© 2026 TechVagas</footer>
+    <footer class="auth-copyright">© 2026 EducaTech</footer>
   </main>
 
 
@@ -917,9 +1024,8 @@
   <main id="screen-register" role="main" aria-label="Cadastro">
 
     <div class="auth-logo" style="margin-bottom:var(--spacing-md);">
-      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
       <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text" style="font-size:1.8rem;">Educa<span>Tech</span></span>
+        <img src="assets/educatech-logo.png" alt="EducaTech" class="auth-logo-img" />
       </button>
     </div>
 
@@ -1053,9 +1159,8 @@
   <main id="screen-forgot" role="main" aria-label="Recuperação de senha">
 
     <div class="auth-logo" style="margin-bottom:var(--spacing-lg);">
-      <!-- LOGO AQUI: troque por <img src="images/logo.png" alt="EducaTech" class="logo-img" /> -->
       <button class="logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
-        <span class="logo-text" style="font-size:1.8rem;">Educa<span>Tech</span></span>
+        <img src="assets/educatech-logo.png" alt="EducaTech" class="auth-logo-img" />
       </button>
     </div>
 
@@ -1100,7 +1205,9 @@
 
       <!-- Preview do certificado — template customizável -->
       <div id="certificate-preview" aria-label="Visualização do certificado">
-        <div class="cert-logo">EducaTech</div>
+        <div class="cert-logo">
+          <img src="assets/educatech-logo.png" alt="EducaTech" class="cert-logo-img" />
+        </div>
         <div class="cert-title">CERTIFICADO DE CONCLUSÃO</div>
         <div class="cert-body">
           <p>Certificamos que</p>
@@ -1133,60 +1240,19 @@
   
   <!-- Modal de confirmação de logoff -->
   <div id="modal-logout" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
-    <div class="modal" style="max-width:420px;">
-      <div class="modal-header">
-        <h3 id="logout-modal-title">Sair da conta</h3>
-        <button class="modal-close" onclick="closeModal('modal-logout')" aria-label="Fechar">✕</button>
-      </div>
-      <p style="margin:var(--spacing-md) 0;">Tem certeza que deseja encerrar sua sessão?</p>
-      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+    <div class="modal modal-confirm" style="max-width:420px;">
+      <div class="confirm-icon" aria-hidden="true">🚪</div>
+      <h3 class="confirm-title" id="logout-modal-title">Sair da conta?</h3>
+      <p class="confirm-text">Tem certeza que quer desconectar de sua conta? Você será redirecionado à página de login.</p>
+      <div class="confirm-actions">
         <button class="btn btn-secondary" onclick="closeModal('modal-logout')">Cancelar</button>
         <button class="btn btn-primary" onclick="confirmLogout()">Sair</button>
       </div>
     </div>
   </div>
 
-  <!-- ================================================
-       BARRA DE NAVEGAÇÃO INFERIOR (GLOBAL)
-       Presente em todas as telas principais
-       ================================================ -->
-  <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Navegação principal">
-
-    <!-- Botão: Tela Inicial -->
-    <button class="nav-item active" id="nav-home"
-            onclick="switchScreen('home')"
-            aria-label="Tela inicial" aria-current="page">
-      <!-- Ícone SVG inline — melhor compatibilidade e escalabilidade -->
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-      </svg>
-      <span>Início</span>
-    </button>
-
-    <!-- Botão: Cursos -->
-    <button class="nav-item" id="nav-courses"
-            onclick="switchScreen('courses')"
-            aria-label="Cursos">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-      </svg>
-      <span>Cursos</span>
-    </button>
-
-    <!-- Botão: Perfil -->
-    <button class="nav-item" id="nav-profile"
-            onclick="switchScreen('profile')"
-            aria-label="Perfil">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-      </svg>
-      <span>Perfil</span>
-    </button>
-
-  </nav>
+  <!-- Barra de navegação inferior removida: a navegação é feita pela barra
+       superior (☰ menu, setas, logo e cartão do usuário), conforme o protótipo. -->
 
 
   <!-- ================================================
@@ -1207,9 +1273,9 @@
         endereco: 'Rua das Flores, 100', cidade: 'São Paulo', estado: 'SP',
         cep: '12300-000', matricula: 'ALN-001',
         // Todo aluno começa com progresso, notas e frequência zerados
-        progresso:  { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 },
-        notas:      { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 },
-        frequencia: { ads: 0, cc: 0, design: 0, ti: 0, ec: 0, adm: 0 }
+        progresso:  { ads: 0, cc: 0, design: 0, ti: 0, ec: 0 },
+        notas:      { ads: 0, cc: 0, design: 0, ti: 0, ec: 0 },
+        frequencia: { ads: 0, cc: 0, design: 0, ti: 0, ec: 0 }
       },
       {
         id: 2, tipo: 'professor', email: 'prof@edu.com', senha: '123456',
@@ -1244,8 +1310,7 @@
       { id: 'cc',     name: 'Ciência da Computação',      icon: '🔬', color: '#7c5cbf' },
       { id: 'design', name: 'Design Gráfico',              icon: '🎨', color: '#f97316' },
       { id: 'ti',     name: 'T.I',                         icon: '🖧', color: '#16a34a' },
-      { id: 'ec',name: 'Engenharia da Computação',         icon: '⚙️', color: '#2c0000' },
-      { id: 'adm',    name: 'Administração',               icon: '📊', color: '#0e7490' }
+      { id: 'ec',name: 'Engenharia da Computação',         icon: '⚙️', color: '#2c0000' }
     ];
 
     /* Estado atual do usuário logado */
@@ -1321,10 +1386,10 @@
       /* Ocultar telas de auth (sem bottom-nav) */
       const authScreens = ['login', 'register', 'forgot'];
 
-      /* Mostrar/ocultar bottom-nav dependendo da tela */
+      /* (Barra inferior removida — referência mantida apenas por segurança) */
       const bottomNav = document.getElementById('bottom-nav');
       if (authScreens.includes(screenId)) {
-        bottomNav.style.display = 'none';
+        if (bottomNav) bottomNav.style.display = 'none';
         /* Ocultar todas as outras telas */
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         /* Ocultar telas de auth */
@@ -1341,8 +1406,8 @@
         return;
       }
 
-      /* Para telas principais: ocultar auth, mostrar bottom-nav */
-      bottomNav.style.display = 'flex';
+      /* Para telas principais: ocultar telas de auth */
+      if (bottomNav) bottomNav.style.display = 'flex';
       authScreens.forEach(id => {
         const el = document.getElementById('screen-' + id);
         if (el) { el.style.display = 'none'; el.classList.remove('active'); }
@@ -1365,9 +1430,11 @@
       }
 
       /* Atualizar conteúdo dinâmico conforme a tela */
+      renderGlobalNav();
       if (screenId === 'home') updateHomeScreen();
       if (screenId === 'courses') updateCoursesScreen();
       if (screenId === 'profile') updateProfileScreen();
+      if (screenId === 'relatorio') renderRelatorio();
 
       /* Scroll para o topo ao trocar de tela */
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1389,14 +1456,14 @@
     /* Atualiza conteúdo da tela inicial */
     function updateHomeScreen() {
       const greetingText = document.getElementById('home-greeting-text');
+      const greetingName = document.getElementById('home-greeting-name');
       const sub = document.getElementById('home-greeting-sub');
       const inProgress = document.getElementById('course-in-progress');
-      const noCourse = document.getElementById('no-course-card');
-      const aside = document.getElementById('home-aside');
 
       if (currentUser) {
         /* Usuário logado */
-        greetingText.textContent = `${getGreeting()}, ${currentUser.nome.split(' ')[0]}!`;
+        greetingText.textContent = getGreeting();
+        if (greetingName) greetingName.textContent = currentUser.nome.split(' ')[0];
         sub.textContent = 'Bem-vindo de volta à sua jornada de aprendizagem.';
 
         /* Encontrar o curso com maior progresso */
@@ -1408,7 +1475,6 @@
         if (best) {
           /* Exibir card de curso em progresso */
           inProgress.style.display = 'block';
-          noCourse.style.display = 'none';
           const courseData = courses.find(c => c.id === best[0]);
           document.getElementById('progress-course-name').textContent =
             (courseData ? courseData.icon + ' ' : '') + (courseData ? courseData.name : best[0]);
@@ -1419,22 +1485,18 @@
             .setAttribute('aria-valuenow', best[1]);
         } else {
           inProgress.style.display = 'none';
-          noCourse.style.display = 'block';
           setSuggestedCourse();
         }
-
-        /* Exibir aside de desempenho */
-        aside.style.display = 'block';
         updatePerformanceSummary();
 
       } else {
         /* Visitante não logado */
-        greetingText.textContent = `${getGreeting()}!`;
+        greetingText.textContent = getGreeting();
+        if (greetingName) greetingName.textContent = 'visitante';
         sub.textContent = 'Explore nossas disciplinas ou faça login para acompanhar seu progresso.';
         inProgress.style.display = 'none';
-        noCourse.style.display = 'block';
-        aside.style.display = 'none';
         setSuggestedCourse();
+        updatePerformanceSummary();
       }
 
       /* Renderizar mini-cards dos cursos */
@@ -1444,22 +1506,8 @@
       updateUserChip();
     }
 
-    /* Atualiza o cartão de usuário (canto superior direito da home) */
-    function updateUserChip() {
-      const chip = document.getElementById('home-user-chip');
-      if (!chip) return;
-      if (!currentUser) {
-        chip.style.display = 'none';
-        return;
-      }
-      chip.style.display = 'flex';
-      const initials = currentUser.nome.split(' ').map(n => n[0]).slice(0,2).join('');
-      document.getElementById('user-chip-avatar').textContent = initials;
-      document.getElementById('user-chip-name').textContent = currentUser.nome;
-      document.getElementById('user-chip-role').textContent = capitalize(currentUser.tipo);
-      document.getElementById('user-chip-matricula').textContent =
-        'Matrícula: ' + currentUser.matricula;
-    }
+    /* O cartão de usuário agora faz parte da barra global (renderGlobalNav). */
+    function updateUserChip() { renderGlobalNav(); }
 
     /* Define aleatoriamente o curso sugerido */
     function setSuggestedCourse() {
@@ -1805,9 +1853,9 @@
         cep:      document.getElementById('reg-cep').value.trim(),
         matricula,
         // Todo aluno novo começa zerado em todas as matérias (progresso, notas e frequência)
-        progresso:  { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
-        notas:      { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
-        frequencia: { ads:0, cc:0, design:0, ti:0, ec:0, adm:0 },
+        progresso:  { ads:0, cc:0, design:0, ti:0, ec:0 },
+        notas:      { ads:0, cc:0, design:0, ti:0, ec:0 },
+        frequencia: { ads:0, cc:0, design:0, ti:0, ec:0 },
         // Professores começam sem disciplinas atribuídas
         disciplinasAtribuidas: tipo === 'professor' ? [] : undefined
       };
@@ -1928,15 +1976,31 @@
       `).join('');
     }
 
-    /* Estrutura placeholder padrão (caso backend não responda) */
+    /* Nomes reais das unidades e atividades (conforme protótipo).
+       Substitua/expanda aqui ou carregue do backend (loadActivitiesFromCSharp). */
+    const UNIT_NAMES = [
+      'FUNDAMENTOS DA PROGRAMAÇÃO',
+      'LÓGICA E ALGORITMOS',
+      'ARQUITETURA DE SISTEMAS',
+      'BANCO DE DADOS I',
+      'DESENVOLVIMENTO WEB'
+    ];
+    const ACTIVITY_NAMES = [
+      'Atividade 1: Introdução',
+      'Atividade 2: Exercícios Práticos',
+      'Atividade 3: Quiz de Fixação',
+      'Atividade 4: Material Complementar',
+      'Atividade 5: Entrega de Projeto'
+    ];
+
+    /* Estrutura padrão (caso o backend não responda):
+       5 unidades nomeadas; as duas últimas ficam "Disponíveis em N dias". */
     function defaultActivities() {
-      const unidades = [];
-      for (let u = 1; u <= 5; u++) {
-        const ativ = [];
-        for (let a = 1; a <= 5; a++) ativ.push(`Atividade ${a} (Placeholder)`);
-        unidades.push({ titulo: `Unidade ${u} (Placeholder)`, atividades: ativ });
-      }
-      return unidades;
+      return UNIT_NAMES.map((nome, i) => ({
+        titulo: nome,
+        atividades: ACTIVITY_NAMES.slice(),
+        lockedDays: i === 3 ? 14 : (i === 4 ? 21 : 0)
+      }));
     }
 
     /* Cache local de atividades por disciplina (preenchido pelo backend C#) */
@@ -2074,15 +2138,478 @@
 
 
     /* ============================================
+       BARRA DE NAVEGAÇÃO GLOBAL (renderizada em todas as telas)
+       Estrutura: [☰  ‹ ›]   [Logo central]   [Usuário / Entrar]
+       ============================================ */
+    function buildGlobalNavHTML() {
+      let userBox = '';
+      if (currentUser) {
+        const initials = currentUser.nome.split(' ').map(n => n[0]).slice(0,2).join('');
+        userBox = `
+          <button class="user-chip" onclick="switchScreen('profile')" aria-label="Abrir meu perfil">
+            <div class="user-chip-info">
+              <span class="user-chip-name">${currentUser.nome}</span>
+              <span class="user-chip-matricula">${currentUser.matricula}</span>
+              <span class="user-chip-status"><span class="status-dot"></span>Online</span>
+            </div>
+            <div class="user-chip-avatar">${initials}</div>
+          </button>`;
+      } else {
+        userBox = `
+          <button class="user-chip user-chip-guest" onclick="switchScreen('login')" aria-label="Entrar na plataforma">
+            <span class="login-icon" aria-hidden="true">➜</span>
+            <span class="user-chip-name">Entrar</span>
+          </button>`;
+      }
+      return `
+        <header class="global-nav" role="banner">
+          <div class="gn-left">
+            <button class="gn-hamburger" onclick="openHamburger()" aria-label="Abrir menu">
+              <span></span><span></span><span></span>
+            </button>
+            <div class="nav-arrows" aria-label="Navegação de páginas">
+              <button class="nav-arrow" onclick="navBack()" aria-label="Voltar página">‹</button>
+              <button class="nav-arrow" onclick="navForward()" aria-label="Avançar página">›</button>
+            </div>
+          </div>
+          <button class="gn-logo logo-btn" onclick="switchScreen('home')" aria-label="Ir para a tela inicial">
+            <!-- Logo do topo: arquivo em assets/educatech-logo.png -->
+            <img src="assets/educatech-logo.png" alt="EducaTech" class="gn-logo-img" />
+          </button>
+          <div class="gn-right">${userBox}</div>
+        </header>`;
+    }
+
+    function renderGlobalNav() {
+      const html = buildGlobalNavHTML();
+      document.querySelectorAll('[data-global-nav]').forEach(slot => {
+        slot.innerHTML = html;
+      });
+      updateNavArrows();
+    }
+
+    /* ============================================
+       MENU HAMBURGER (drawer)
+       ============================================ */
+    function openHamburger() {
+      /* "Sair" só aparece para usuário logado */
+      const logoutItem = document.getElementById('hamburger-logout-item');
+      if (logoutItem) logoutItem.style.display = currentUser ? 'block' : 'none';
+      document.getElementById('hamburger-drawer').classList.add('open');
+      document.getElementById('hamburger-drawer').setAttribute('aria-hidden','false');
+    }
+    function closeHamburger() {
+      document.getElementById('hamburger-drawer').classList.remove('open');
+      document.getElementById('hamburger-drawer').setAttribute('aria-hidden','true');
+    }
+    function hamburgerGo(screen) {
+      closeHamburger();
+      switchScreen(screen);
+    }
+    function hamburgerLogout() {
+      closeHamburger();
+      logout();
+    }
+
+    /* ============================================
+       DASHBOARD: ACESSO RÁPIDO, CERTIFICADOS, COMUNIDADE, DESEMPENHO
+       ============================================ */
+    function renderQuickAccess() {
+      const row = document.getElementById('quick-access-row');
+      if (!row) return;
+      const three = courses.slice(0, 3);
+      row.innerHTML = three.map(c => `
+        <button class="qa-item" style="border-left-color:${c.color};"
+                onclick="openCourse('${c.id}')">
+          <span class="qa-icon" style="background:${c.color}1a;">${c.icon}</span>
+          <span class="qa-texts">
+            <span class="qa-name">${c.name}</span>
+            <span class="qa-sub">5 Módulos</span>
+          </span>
+        </button>
+      `).join('');
+    }
+
+    function updateDashboardExtras() {
+      // Certificados
+      const cEl = document.getElementById('cert-count-text');
+      if (cEl) {
+        const count = currentUser
+          ? Object.values(currentUser.progresso || {}).filter(v => v >= 100).length
+          : 0;
+        cEl.textContent = count > 0
+          ? `Você possui ${count} certificado${count > 1 ? 's' : ''} disponíve${count > 1 ? 'is' : 'l'}.`
+          : 'Você não possui nenhum novo certificado';
+      }
+      // Comunidade: número aleatório entre 300 e 2000
+      const cm = document.getElementById('community-count');
+      if (cm) cm.textContent = Math.floor(Math.random() * (2000 - 300 + 1)) + 300;
+    }
+
+    /* Sobrescreve o resumo de desempenho do aside (cadeado se deslogado) */
+    function updatePerformanceSummary() {
+      const box = document.getElementById('home-performance-summary');
+      const btn = document.getElementById('btn-relatorio-completo');
+      if (!box) return;
+      if (!currentUser) {
+        box.innerHTML = `
+          <div class="locked-area">
+            <div class="lock-icon">🔒</div>
+            <p>Entre para visualizar seu desempenho.</p>
+          </div>`;
+        if (btn) {
+          btn.textContent = 'Entre ou Registre-se';
+          btn.onclick = () => switchScreen('login');
+        }
+        return;
+      }
+      if (btn) {
+        btn.textContent = 'Ver Relatório Detalhado';
+        btn.onclick = () => switchScreen('relatorio');
+      }
+      const prog = currentUser.progresso || {};
+      const vals = Object.values(prog);
+      const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0) / vals.length) : 0;
+      box.innerHTML = `
+        <p class="perf-avg">Progresso médio: <strong>${avg}%</strong></p>
+        <div class="progress-bar-wrap" style="margin-bottom:12px;">
+          <div class="progress-bar-fill" style="width:${avg}%"></div>
+        </div>
+        ${courses.map(c => `
+          <div class="perf-row">
+            <span>${c.icon} ${c.name}</span>
+            <strong style="color:${c.color}">${prog[c.id] || 0}%</strong>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    /* Antiga função renderCourseMiniCards substituída por renderQuickAccess */
+    function renderCourseMiniCards() {
+      renderQuickAccess();
+      updateDashboardExtras();
+    }
+
+    /* ============================================
+       TELA: RELATÓRIO DE DESEMPENHO
+       ============================================ */
+    function renderRelatorio() {
+      const box = document.getElementById('relatorio-content');
+      if (!box) return;
+      if (!currentUser) {
+        box.innerHTML = `
+          <div class="locked-area" style="text-align:center; padding:var(--spacing-2xl) 0;">
+            <div class="lock-icon" style="font-size:3rem;">🔒</div>
+            <p style="margin-top:var(--spacing-md);">Entre em sua conta para ver seu relatório completo</p>
+            <button class="btn btn-primary mt-md" onclick="switchScreen('login')">Entrar</button>
+          </div>`;
+        return;
+      }
+      const prog = currentUser.progresso || {};
+      const notas = currentUser.notas || {};
+      const freq = currentUser.frequencia || {};
+      const vals = Object.values(prog);
+      const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0) / vals.length) : 0;
+      box.innerHTML = `
+        <div class="card mb-lg">
+          <h3>Progresso médio</h3>
+          <p style="font-size:2rem; font-weight:700; color:var(--color-primary);">${avg}%</p>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${avg}%"></div></div>
+        </div>
+        <div class="card">
+          <h3 class="mb-md">Por disciplina</h3>
+          <table class="data-table">
+            <thead><tr><th>Disciplina</th><th>Progresso</th><th>Nota</th><th>Frequência</th></tr></thead>
+            <tbody>
+              ${courses.map(c => `
+                <tr>
+                  <td>${c.icon} ${c.name}</td>
+                  <td>${prog[c.id] || 0}%</td>
+                  <td>${notas[c.id] || 0}</td>
+                  <td>${freq[c.id] || 0}%</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    /* ============================================
+       ATIVIDADES: sistema de travamento
+       Próxima atividade só desbloqueia se a anterior foi concluída.
+       ============================================ */
+    const completedActivities = {}; // { 'ads-0-0': true, ... }
+
+    function isActivityUnlocked(courseId, unitIdx, actIdx) {
+      if (unitIdx === 0 && actIdx === 0) return true;
+      // procura a atividade imediatamente anterior
+      let prevU = unitIdx, prevA = actIdx - 1;
+      if (prevA < 0) { prevU = unitIdx - 1; prevA = 4; }
+      return !!completedActivities[`${courseId}-${prevU}-${prevA}`];
+    }
+
+    /* Substitui openActivity para checar travamento e abrir quiz da ADS U1 A3 */
+    function openActivity(courseId, unitIdx, actIdx) {
+      if (!isActivityUnlocked(courseId, unitIdx, actIdx)) {
+        showToast(`Você precisa concluir a atividade ${actIdx === 0 ? 5 : actIdx} antes de continuar.`);
+        return;
+      }
+      // Caminho especial: ADS - Unidade 1 - Atividade 3 -> Quiz de Fixação
+      if (courseId === 'ads' && unitIdx === 0 && actIdx === 2) {
+        startQuiz();
+        return;
+      }
+      // Demais atividades: marca como concluída automaticamente (demo)
+      completedActivities[`${courseId}-${unitIdx}-${actIdx}`] = true;
+      showToast(`Atividade ${actIdx + 1} concluída!`);
+      renderActivities(courseId);
+    }
+
+    /* Renderiza as unidades em cards: cabeçalho (Unidade N + nome),
+       lista de atividades com status (✓ concluída / ○ disponível / 🔒 bloqueada)
+       e rodapé com progresso. Unidades futuras ficam "Disponíveis em N dias". */
+    function renderActivities(courseId) {
+      const container = document.getElementById('activities-list');
+      if (!container) return;
+      const unidades = activitiesByCourse[courseId] || defaultActivities();
+      container.innerHTML = unidades.map((u, i) => {
+        /* Unidade bloqueada por prazo (ex.: "Disponível em 14 dias") */
+        if (u.lockedDays) {
+          return `
+            <section class="unit-block unit-blocked">
+              <div class="unit-head">
+                <h3 class="unit-title">Unidade ${i + 1}</h3>
+                <span class="unit-sub">${u.titulo}</span>
+              </div>
+              <div class="activity-list">
+                ${u.atividades.map(a => `
+                  <div class="activity-item locked">
+                    <span class="activity-name"><span class="act-status">🔒</span> ${a}</span>
+                  </div>`).join('')}
+              </div>
+              <div class="unit-foot unit-foot-blocked">🔒 Disponível em ${u.lockedDays} dias</div>
+            </section>`;
+        }
+
+        /* Progresso da unidade = atividades concluídas / total */
+        const doneCount = u.atividades.filter((_, j) => completedActivities[`${courseId}-${i}-${j}`]).length;
+        const pct = Math.round((doneCount / u.atividades.length) * 100);
+
+        return `
+          <section class="unit-block">
+            <div class="unit-head">
+              <h3 class="unit-title">Unidade ${i + 1}</h3>
+              <span class="unit-sub">${u.titulo}</span>
+            </div>
+            <div class="activity-list">
+              ${u.atividades.map((a, j) => {
+                const unlocked = isActivityUnlocked(courseId, i, j);
+                const done = completedActivities[`${courseId}-${i}-${j}`];
+                const status = unlocked ? (done ? '✓' : '○') : '🔒';
+                const cls = (unlocked ? '' : 'locked') + (done ? ' done' : '');
+                return `
+                  <button class="activity-item ${cls}"
+                          onclick="openActivity('${courseId}', ${i}, ${j})">
+                    <span class="activity-name"><span class="act-status">${status}</span> ${a}</span>
+                    <span class="activity-arrow">›</span>
+                  </button>`;
+              }).join('')}
+            </div>
+            <div class="unit-foot">
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+              <span class="unit-pct">${pct}% Concluído</span>
+            </div>
+          </section>`;
+      }).join('');
+    }
+
+    /* Abre a primeira atividade desbloqueada ainda não concluída */
+    function continueLastActivity() {
+      const id = currentCourseId || 'ads';
+      const unidades = activitiesByCourse[id] || defaultActivities();
+      for (let i = 0; i < unidades.length; i++) {
+        if (unidades[i].lockedDays) continue;
+        for (let j = 0; j < unidades[i].atividades.length; j++) {
+          if (isActivityUnlocked(id, i, j) && !completedActivities[`${id}-${i}-${j}`]) {
+            openActivity(id, i, j);
+            return;
+          }
+        }
+      }
+      showToast('Você concluiu todas as atividades disponíveis! 🎉');
+    }
+
+    /* Reinicia o progresso da disciplina atual */
+    function restartCourse() {
+      const id = currentCourseId;
+      if (!id) return;
+      Object.keys(completedActivities).forEach(k => {
+        if (k.startsWith(id + '-')) delete completedActivities[k];
+      });
+      renderActivities(id);
+      showToast('Progresso da disciplina reiniciado.');
+    }
+
+    /* ============================================
+       QUIZ — ADS Unidade 1 / Atividade 3
+       5 questões, 2,0 pontos cada, 30 minutos.
+       ============================================ */
+    const quizBank = [
+      {
+        q: 'Um analista foi contratado para desenvolver um sistema de pesquisa de DVDs em lojas virtuais. O sistema deverá solicitar ao usuário um título de DVD, que será usado para realizar a pesquisa nas bases de dados das lojas conveniadas. Ao detectar a disponibilidade do DVD solicitado, o sistema armazenará temporariamente os dados das lojas (nome, preço, data prevista para entrega do produto) e exibirá as informações ordenadas por preço. Após analisar as informações, o cliente poderá efetuar a compra. O contratante deverá testar algumas operações do sistema antes de ele ser finalizado. Há tempo suficiente para que o analista atenda a essa solicitação e efetue eventuais modificações exigidas pelo contratante. Com relação a essa situação, avalie as afirmativas a seguir quanto ao modelo de ciclo de vida.\n\nI. O entendimento do sistema como um todo e a execução sequencial das fases sem retorno produzem um sistema que pode ser validado pelo contratante.\nII. A elaboração do protótipo pode ser utilizada para resolver dúvidas de comunicação, o que aumenta os riscos de inclusão de novas funcionalidades não prioritárias.\nIII. A definição das restrições deve ser a segunda fase a ser realizada no desenvolvimento do projeto, correspondendo à etapa de engenharia.\nIV. Um processo iterativo permite que versões progressivas mais completas do sistema sejam construídas e avaliadas.\n\nÉ correto apenas o que se afirma em:',
+        opts: ['I e II.', 'I e III.', 'II e III.', 'II e IV.', 'III e IV.'],
+        correct: 3
+      },
+      {
+        q: 'Uma pizzaria fez uma ampliação de suas instalações e o gerente aproveitou para melhorar o sistema informatizado, que era limitado e não atendia a todas as funções necessárias. O gerente, então, contratou uma empresa para ampliar o software. No desenvolvimento do novo sistema, a empresa aproveitou partes do sistema antigo e estendeu os componentes de maneira a usar código validado, acrescentando as novas funções solicitadas. Que conceito de orientação a objetos está descrito na situação hipotética acima?',
+        opts: ['Sobrecarga.', 'Herança.', 'Sobreposição.', 'Abstração.', 'Mensagem.'],
+        correct: 1
+      },
+      {
+        q: 'Observe o diagrama de sequência apresentado (interações entre Aplicativo, API, GerenciadorArquivos e AcionadorDispositivo). Com relação ao diagrama, assinale a opção correta.',
+        image: 'assets/quiz-q3-diagrama.jpg',
+        opts: [
+          'Para economizar tempo e memória, as mensagens de retorno 7: dados e 15: dados poderiam ser mescladas em uma única mensagem.',
+          'O objeto Controlador Acesso utiliza uma estrutura de repetição para verificar os atributos de acesso a um arquivo.',
+          'A mensagem 5: obterACL( ) pode levar à repetição da chamada 4: lerPermissao( ).',
+          'Sempre que um Aplicativo fizer uma leitura, será construído e destruído um objeto ControladorAcesso.',
+          'A mensagem 3: preparar( ) ocorre simultaneamente (em paralelo) à mensagem 4: lerPermissao( ).'
+        ],
+        correct: 3
+      },
+      {
+        q: 'Leia o código a seguir.\n\nSUBROTINA xis()\n  i = 0\n  ENQUANTO (i < Gn) FACA\n    i = i + 1\n    SE (calc(i) <= Gn) ENTAO\n      f1(i)\n    SENAO\n      f2(i)\n    FIM SE\n  FIM ENQUANTO\n  Imprima("ok")\nFIM SUBROTINA\n\nConsidere que: a subrotina xis() faz parte de um programa; a variável i é local a xis(); Gn é global e foi inicializada em outra parte do programa; o código-fonte disponível é apenas o de xis(); o critério de aceitação do teste é: xis() não entra em laço infinito.\n\nI. aplicar testes de caixa-branca às rotinas calc(), f1() e f2() e, em seguida, usar o resultado para fazer um teste de mesa da subrotina xis().\nII. aplicar testes de caixa-preta que forcem a chamada a xis() e depois medir a porcentagem de sucesso da subrotina xis().\nIII. aplicar testes de caixa-preta isoladamente ao código objeto das subrotinas calc(), f1() e f2() antes de aplicar um teste que envolva a subrotina xis().\n\nAssinale a opção correta.',
+        opts: [
+          'Apenas um item está certo.',
+          'Apenas os itens I e II estão certos.',
+          'Apenas os itens I e III estão certos.',
+          'Apenas os itens II e III estão certos.',
+          'Todos os itens estão certos.'
+        ],
+        correct: 0
+      },
+      {
+        q: 'O conceito de máquina virtual (MV) foi usado, na década de 1970, no sistema operacional IBM System 370. Atualmente, datacenters usam MVs para migrar tarefas entre servidores conectados em rede e equilibrar carga de processamento. Plataformas atuais de desenvolvimento de software empregam MVs (Java, .NET). Uma MV pode ser construída para emular um processador ou um computador completo. Um código desenvolvido para uma máquina real pode ser executado de forma transparente em uma MV. Assinale a opção correta.',
+        opts: [
+          'O conceito de transparência mencionado indica que a MV permite que um aplicativo acesse diretamente o hardware da máquina.',
+          'Uma das vantagens mais significativas de uma MV é a economia de carga de CPU e de memória RAM na execução de um aplicativo.',
+          'Uma MV oferece maior controle de segurança, uma vez que aplicativos são executados em um ambiente controlado.',
+          'Para emular uma CPU dual-core, uma MV deve ser instalada e executada em um computador com CPU dual-core.',
+          'Como uma MV não é uma máquina real, um sistema operacional nela executado fica automaticamente imune a vírus.'
+        ],
+        correct: 2
+      }
+    ];
+
+    let quizState = { idx: 0, answers: Array(5).fill(null), timeLeft: 30 * 60, timer: null };
+
+    function startQuiz() {
+      quizState = { idx: 0, answers: Array(5).fill(null), timeLeft: 30 * 60, timer: null };
+      switchScreen('quiz');
+      renderQuizQuestion();
+      if (quizState.timer) clearInterval(quizState.timer);
+      quizState.timer = setInterval(() => {
+        quizState.timeLeft--;
+        if (quizState.timeLeft <= 0) {
+          clearInterval(quizState.timer);
+          finishQuiz();
+          return;
+        }
+        updateQuizTimer();
+      }, 1000);
+      updateQuizTimer();
+    }
+
+    function updateQuizTimer() {
+      const el = document.getElementById('quiz-timer');
+      if (!el) return;
+      const m = String(Math.floor(quizState.timeLeft / 60)).padStart(2,'0');
+      const s = String(quizState.timeLeft % 60).padStart(2,'0');
+      el.textContent = `${m}:${s}`;
+    }
+
+    function renderQuizQuestion() {
+      const i = quizState.idx;
+      const total = quizBank.length;
+      const q = quizBank[i];
+      document.getElementById('quiz-current').textContent = i + 1;
+      document.getElementById('quiz-total').textContent = total;
+      document.getElementById('quiz-q-num').textContent = i + 1;
+      document.getElementById('quiz-progress-fill').style.width = ((i + 1) / total * 100) + '%';
+      document.getElementById('quiz-statement').textContent = q.q;
+      const stmt = document.getElementById('quiz-statement');
+      stmt.style.whiteSpace = 'pre-wrap';
+      const oldImg = document.getElementById('quiz-image');
+      if (oldImg) oldImg.remove();
+      if (q.image) {
+        const img = document.createElement('img');
+        img.id = 'quiz-image';
+        img.src = q.image;
+        img.alt = 'Imagem da questão';
+        img.style.cssText = 'display:block;max-width:100%;margin:12px 0;border-radius:8px;border:1px solid #e5e7eb;';
+        stmt.insertAdjacentElement('afterend', img);
+      }
+      const ul = document.getElementById('quiz-options');
+      ul.innerHTML = q.opts.map((o, idx) => `
+        <li>
+          <label class="quiz-opt ${quizState.answers[i] === idx ? 'selected' : ''}">
+            <input type="radio" name="quiz-opt" value="${idx}" ${quizState.answers[i] === idx ? 'checked' : ''}
+                   onchange="selectQuizOption(${idx})" />
+            <span class="quiz-opt-body">
+              <span class="quiz-opt-label">Alternativa ${String.fromCharCode(65 + idx)}</span>
+              <span class="quiz-opt-text">${o}</span>
+            </span>
+          </label>
+        </li>`).join('');
+      document.getElementById('quiz-prev').disabled = i === 0;
+      document.getElementById('quiz-next').disabled = i === total - 1;
+      renderQuizMap();
+    }
+
+    /* Mapa do Quiz: botões numerados (atual destacado, respondidas marcadas) */
+    function renderQuizMap() {
+      const grid = document.getElementById('quiz-map-grid');
+      if (!grid) return;
+      grid.innerHTML = quizBank.map((_, idx) => {
+        const isCurrent = idx === quizState.idx;
+        const answered = quizState.answers[idx] !== null;
+        return `<button class="quiz-map-btn ${isCurrent ? 'current' : ''} ${answered ? 'answered' : ''}"
+                        onclick="quizGoto(${idx})" aria-label="Ir para questão ${idx + 1}">${idx + 1}</button>`;
+      }).join('');
+    }
+    function quizGoto(idx) { quizState.idx = idx; renderQuizQuestion(); }
+
+    function selectQuizOption(idx) {
+      quizState.answers[quizState.idx] = idx;
+      renderQuizQuestion();
+    }
+    function quizPrev() { if (quizState.idx > 0) { quizState.idx--; renderQuizQuestion(); } }
+    function quizNext() { if (quizState.idx < quizBank.length - 1) { quizState.idx++; renderQuizQuestion(); } }
+
+    function finishQuiz() {
+      if (quizState.timer) clearInterval(quizState.timer);
+      const score = quizState.answers.reduce((s, a, i) => s + (a === quizBank[i].correct ? 2 : 0), 0);
+      closeModal('modal-finish-quiz');
+      showToast(`Tentativa enviada! Nota: ${score.toFixed(1)} / 10`);
+      // Marca a atividade como concluída
+      completedActivities['ads-0-2'] = true;
+      if (currentUser) {
+        currentUser.notas = currentUser.notas || {};
+        currentUser.notas.ads = score;
+      }
+      switchScreen('activities');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+    /* ============================================
        INICIALIZAÇÃO
        Executado ao carregar a página
        ============================================ */
     (function init() {
+      /* Renderiza barra de navegação global em todas as telas */
+      renderGlobalNav();
       /* Exibir a tela inicial com conteúdo padrão */
       updateHomeScreen();
-
-      /* Garantir que bottom-nav esteja visível */
-      document.getElementById('bottom-nav').style.display = 'flex';
 
       /* Inicia o relógio ("São HH:MM") e mantém atualizado */
       startClock();

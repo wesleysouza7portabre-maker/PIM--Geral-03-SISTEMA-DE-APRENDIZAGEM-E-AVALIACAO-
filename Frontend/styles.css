@@ -41,7 +41,6 @@
   --course-design:  #f97316;   /* Design Gráfico - Laranja criativo */
   --course-ti:      #16a34a;   /* T.I - Verde tecnologia */
   --course-ec: #2c0000;   /* Engenharia da Computação - Vermelho escuro institucional */
-  --course-adm:     #0e7490;   /* Administração - Teal corporativo */
 
   /* Sombras */
   --shadow-sm:  0 1px 3px rgba(124,58,237,0.10);
@@ -94,8 +93,8 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
-  /* Evita sobreposição com navbar fixa inferior */
-  padding-bottom: var(--nav-height);
+  /* Respiro inferior (a barra de navegação fixa foi removida) */
+  padding-bottom: var(--spacing-xl);
   line-height: 1.6;
 }
 
@@ -139,12 +138,12 @@ p {
 /* =============================================
    LAYOUT PRINCIPAL
    ============================================= */
-/* Container central limitando largura */
+/* Container central limitando largura — otimizado para desktop 1920×1080 */
 .container {
   width: 100%;
-  max-width: 900px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-lg);
 }
 
 /* Cada "tela" ocupa toda a altura visível */
@@ -294,7 +293,7 @@ p {
 
 .btn-primary {
   background: var(--color-primary);
-  color: var(--color-text);
+  color: #ffffff;
 }
 /* Hover escurece o tom — sem glow */
 .btn-primary:hover {
@@ -487,8 +486,16 @@ p {
   font-size: clamp(1.4rem, 4vw, 1.8rem);
   font-weight: 800;
   color: var(--color-text);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-sm);
   padding-top: var(--spacing-sm);
+}
+
+/* Subtítulo descritivo abaixo do título da tela */
+.screen-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 0.92rem;
+  max-width: 640px;
+  margin-bottom: var(--spacing-xl);
 }
 
 /* Grid de cards de disciplinas */
@@ -506,7 +513,7 @@ p {
   cursor: pointer;
   transition: box-shadow var(--transition), transform var(--transition);
   background: var(--color-surface);
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border);
 }
 
 .discipline-card:hover {
@@ -523,24 +530,24 @@ p {
 }
 
 .discipline-icon {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.25);
+  background: var(--color-primary-pale);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
 }
 
 .discipline-card-header h3 {
-  color: #fff;
-  font-size: 0.95rem;
+  color: var(--color-text);
+  font-size: 1.05rem;
 }
 
 .discipline-card-header p {
-  color: rgba(255,255,255,0.80);
+  color: var(--color-text-muted);
   font-size: 0.78rem;
   margin-top: 2px;
 }
@@ -550,21 +557,38 @@ p {
   padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
 }
 
-/* Cores por disciplina */
-.course-ads  .discipline-card-header { background: var(--course-ads); }
-.course-cc   .discipline-card-header { background: var(--course-cc); }
-.course-design .discipline-card-header { background: var(--course-design); }
-.course-ti   .discipline-card-header { background: var(--course-ti); }
-.course-ec .discipline-card-header { background: var(--course-ec); }
-.course-adm  .discipline-card-header { background: var(--course-adm); }
+/* Cor por disciplina aplicada ao ícone (fundo claro + glifo na cor do curso) */
+.course-ads    .discipline-icon { background: rgba(79,142,247,0.14);  color: var(--course-ads); }
+.course-cc     .discipline-icon { background: rgba(124,92,191,0.14);  color: var(--course-cc); }
+.course-design .discipline-icon { background: rgba(249,115,22,0.14);  color: var(--course-design); }
+.course-ti     .discipline-icon { background: rgba(22,163,74,0.14);   color: var(--course-ti); }
+.course-ec     .discipline-icon { background: rgba(217,119,6,0.14);   color: #b45309; }
 
-/* Bordas coloridas sutis nos cards */
-.course-ads  { border-color: var(--course-ads); }
-.course-cc   { border-color: var(--course-cc); }
-.course-design { border-color: var(--course-design); }
-.course-ti   { border-color: var(--course-ti); }
-.course-ec { border-color: var(--course-ec); }
-.course-adm  { border-color: var(--course-adm); }
+/* Card "Explorar Novas Matérias" — tracejado, conteúdo centralizado */
+.explore-card {
+  border: 2px dashed var(--color-primary-light);
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+}
+.explore-card:hover {
+  background: var(--color-primary-pale);
+  border-color: var(--color-primary);
+}
+.explore-inner { text-align: center; padding: var(--spacing-lg); }
+.explore-icon {
+  width: 44px; height: 44px; margin: 0 auto var(--spacing-sm);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-text-muted);
+  color: var(--color-text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; font-weight: 400;
+}
+.explore-inner h3 { color: var(--color-text-muted); font-size: 1rem; }
+.explore-inner p  { color: var(--color-text-muted); font-size: 0.8rem; margin-top: 4px; }
 
 /* =============================================
    SISTEMA DE MEDALHAS
@@ -728,6 +752,20 @@ select.form-control {
 
 .form-grid-2 .form-group { margin-bottom: var(--spacing-md); }
 
+/* Linha do label com link auxiliar (ex.: Senha + Esqueci minha senha) */
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+.forgot-inline {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+.forgot-inline:hover { color: var(--color-accent-dark); }
+
 /* Mensagem de erro */
 .form-error {
   color: #dc2626;
@@ -839,6 +877,20 @@ select.form-control {
   margin-left: auto;
   color: var(--color-text-muted);
   font-size: 1rem;
+}
+
+/* Botão "Sair da Conta": fundo vermelho-claro + texto vermelho legível
+   (antes ficava texto vermelho-escuro sobre vermelho sólido = ilegível) */
+.profile-menu-item.btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  font-weight: 700;
+}
+.profile-menu-item.btn-danger:hover {
+  background: #fecaca;
+  border-color: #f87171;
+  transform: none;
 }
 
 /* Painel de detalhes do perfil */
@@ -972,6 +1024,25 @@ select.form-control {
   padding: 4px;
 }
 .modal-close:hover { color: var(--color-text); }
+
+/* Modal de confirmação centralizado (ícone + título + texto + ações) */
+.modal-confirm { text-align: center; }
+.modal-confirm .confirm-icon {
+  width: 56px; height: 56px; margin: 0 auto var(--spacing-md);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-pale);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.modal-confirm .confirm-title { font-size: 1.2rem; margin-bottom: var(--spacing-sm); }
+.modal-confirm .confirm-text {
+  font-size: 0.9rem; color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+.modal-confirm .confirm-actions {
+  display: flex; gap: var(--spacing-sm); justify-content: center;
+}
+.modal-confirm .confirm-actions .btn { min-width: 120px; }
 
 /* Template de certificado */
 #certificate-preview {
@@ -1352,57 +1423,47 @@ select.form-control {
 
 
 /* =============================================
-   TELA INICIAL — CENTRALIZADO
+   TELA INICIAL — saudação centralizada, dashboard à esquerda
    ============================================= */
 #screen-home .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  display: block;
+  text-align: left;
 }
 #screen-home .greeting,
 #screen-home .greeting-sub,
-#screen-home .home-section-title {
+#screen-home .home-clock {
   text-align: center;
   width: 100%;
 }
-#screen-home .home-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: var(--spacing-lg);
-}
-#screen-home .home-layout > div,
-#screen-home .home-layout > aside {
-  width: 100%;
-  max-width: 640px;
-}
-#screen-home .courses-mini-grid {
-  justify-content: center;
-}
 
-/* Relógio "São HH:MM" */
-.home-clock {
-  /* Mostrado ao lado do "Bom dia! 👋" (preto, mesmo tamanho de leitura) */
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 1.8rem;
-  color: #000000;
-  letter-spacing: 0.3px;
-  margin-left: var(--spacing-sm);
-}
-
-/* Saudação em preto, com emoji e relógio na mesma linha */
+/* Saudação principal "Bom dia, Hugo! 👋" */
 #screen-home .greeting {
   color: #000000;
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: var(--spacing-xs);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 800;
+  margin-top: var(--spacing-md);
+  display: block;
 }
-#screen-home .greeting .greeting-emoji { font-size: 1.4rem; }
+#screen-home .greeting .greeting-name { color: #000000; }
+#screen-home .greeting .greeting-emoji {
+  font-size: 1.6rem;
+  margin-left: 6px;
+}
+
+/* Relógio "São HH:MM" abaixo da saudação, em cinza claro */
+.home-clock {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+#screen-home .greeting-sub {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
 
 /* =============================================
    CABEÇALHO: SETAS DE NAVEGAÇÃO + LOGO CLICÁVEL
@@ -1518,46 +1579,126 @@ select.form-control {
 /* =============================================
    TELA DE ATIVIDADES (Unidades + Atividades)
    ============================================= */
+/* Cabeçalho da disciplina (selo + título central + ações) */
+.activities-head {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+.activities-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-pale);
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+.activities-head .screen-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: var(--spacing-xs);
+}
+.activities-head #activities-course-sub {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+.activities-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Grade de unidades — 1 / 2 / 3 colunas (igual ao protótipo no desktop) */
+.units-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  align-items: start;
+}
+@media (min-width: 700px)  { .units-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .units-grid { grid-template-columns: repeat(3, 1fr); } }
+
 .unit-block {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
+.unit-block.unit-blocked { opacity: 0.7; }
+
+.unit-head { margin-bottom: var(--spacing-md); }
 .unit-title {
-  font-size: 1.05rem;
-  margin-bottom: var(--spacing-sm);
+  font-size: 1.1rem;
   color: var(--color-text);
 }
+.unit-sub {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 2px;
+  flex: 1;
 }
 .activity-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  background: transparent;
+  border: none;
   border-radius: var(--radius-sm);
-  padding: 12px var(--spacing-md);
+  padding: 9px 8px;
   font-family: var(--font-ui);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--color-text);
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
+  transition: background var(--transition);
   text-align: left;
+  width: 100%;
 }
-.activity-item:hover {
-  background: var(--color-primary-light);
-  transform: translateX(2px);
+.activity-item:hover { background: var(--color-primary-pale); }
+.activity-name { display: flex; align-items: center; gap: 8px; }
+.act-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  font-size: 0.9rem;
+  color: var(--color-primary);
 }
+.activity-item.done { color: var(--color-text-secondary); }
+.activity-item.done .act-status { color: #16a34a; }
 .activity-arrow {
   color: var(--color-text-muted);
   font-size: 1.2rem;
+}
+
+/* Rodapé da unidade — progresso ou aviso de bloqueio */
+.unit-foot {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}
+.unit-foot .progress-bar-wrap { height: 6px; margin: 0 0 6px; }
+.unit-pct { font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); }
+.unit-foot-blocked {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
 /* Botão voltar dentro do header */
@@ -1596,10 +1737,10 @@ select.form-control {
 }
 #screen-login { position: relative; min-height: 100vh; padding-bottom: 64px; }
 
-/* Splash screen */
+/* Splash screen — fundo escuro com brilho roxo sutil (conforme protótipo) */
 .splash-screen {
   position: fixed; inset: 0;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  background: radial-gradient(circle at 50% 42%, #2a1a4a 0%, #150f24 55%, #0c0913 100%);
   display: flex; align-items: center; justify-content: center;
   z-index: 9999;
   transition: opacity .4s ease;
@@ -1613,11 +1754,459 @@ select.form-control {
   letter-spacing: 0.02em;
 }
 .splash-logo span { color: var(--color-tertiary); }
-.splash-spinner {
-  width: 36px; height: 36px; margin: 18px auto 0;
-  border: 3px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: splash-spin 0.9s linear infinite;
+
+/* Loader de 3 bolinhas pulsantes */
+.splash-dots {
+  display: flex; gap: 8px; justify-content: center;
+  margin: 20px auto 0;
 }
-@keyframes splash-spin { to { transform: rotate(360deg); } }
+.splash-dots span {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--color-primary-light);
+  animation: splash-pulse 1.1s ease-in-out infinite;
+}
+.splash-dots span:nth-child(2) { animation-delay: 0.18s; }
+.splash-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes splash-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+
+/* =============================================
+   BARRA DE NAVEGAÇÃO GLOBAL (topo)
+   ============================================= */
+.global-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.gn-left { display: flex; align-items: center; gap: var(--spacing-sm); justify-self: start; }
+.gn-logo { justify-self: center; }
+.gn-right { justify-self: end; }
+.gn-hamburger {
+  background: transparent; border: 0; width: 38px; height: 38px;
+  display: inline-flex; flex-direction: column; justify-content: center;
+  align-items: center; gap: 5px; cursor: pointer; border-radius: var(--radius-sm);
+}
+.gn-hamburger:hover { background: var(--color-surface-2); }
+.gn-hamburger span {
+  display: block; width: 22px; height: 2px; background: var(--color-text); border-radius: 2px;
+}
+
+/* user-chip (canto direito da nav global) */
+.user-chip {
+  display: inline-flex; align-items: center; gap: var(--spacing-sm);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 6px 10px; cursor: pointer;
+  font-family: var(--font-ui);
+}
+.user-chip:hover { box-shadow: var(--shadow-sm); }
+.user-chip-info { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.user-chip-name { font-weight: 700; font-size: 0.85rem; color: var(--color-text); }
+.user-chip-matricula, .user-chip-role { font-size: 0.7rem; color: var(--color-text-muted); }
+.user-chip-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.7rem; color: #16a34a; font-weight: 600;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #16a34a;
+  display: inline-block;
+}
+.user-chip-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-primary); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.82rem;
+}
+.user-chip-guest { color: var(--color-primary); font-weight: 700; padding: 8px 14px; }
+.user-chip-guest .login-icon { font-size: 1rem; }
+
+/* =============================================
+   MENU HAMBURGER (drawer lateral)
+   ============================================= */
+.hamburger-drawer {
+  position: fixed; inset: 0; z-index: 1000;
+  pointer-events: none;
+}
+.hamburger-drawer.open { pointer-events: auto; }
+.hamburger-backdrop {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.20);
+  opacity: 0; transition: opacity var(--transition);
+}
+.hamburger-drawer.open .hamburger-backdrop { opacity: 1; }
+
+/* Menu em formato de dropdown ancorado abaixo do botão ☰ (igual ao protótipo) */
+.hamburger-panel {
+  position: absolute;
+  top: 60px;
+  left: var(--spacing-md);
+  width: 250px; max-width: 86vw;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-sm);
+  display: flex; flex-direction: column; gap: 2px;
+  transform: translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition), opacity var(--transition);
+  z-index: 1;
+}
+.hamburger-drawer.open .hamburger-panel {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.hamburger-close { display: none; }
+.hamburger-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+/* "Sair" separado por uma linha sutil no rodapé do menu */
+#hamburger-logout-item {
+  margin-top: 4px; padding-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+.hamburger-list button {
+  display: flex; align-items: center; gap: var(--spacing-sm);
+  width: 100%; padding: 12px 14px;
+  background: transparent; border: 1px solid transparent; border-radius: var(--radius-md);
+  font-family: var(--font-ui); font-size: 0.95rem; color: var(--color-text);
+  cursor: pointer; text-align: left;
+}
+.hamburger-list button:hover { background: var(--color-surface-2); border-color: var(--color-border); }
+.hamburger-list span { font-size: 1.1rem; }
+/* Item "Sair" no menu — destaque sutil em vermelho */
+.hamburger-list .hamburger-logout { color: #b91c1c; }
+.hamburger-list .hamburger-logout:hover { background: #fee2e2; border-color: #fca5a5; }
+
+/* =============================================
+   SPLASH SUBTITLE
+   ============================================= */
+.splash-subtitle {
+  margin-top: var(--spacing-sm);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* =============================================
+   DASHBOARD (home)
+   ============================================= */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+@media (min-width: 900px) {
+  .dash-grid { grid-template-columns: minmax(0, 1fr) 360px; }
+}
+@media (min-width: 1280px) {
+  .dash-grid { grid-template-columns: minmax(0, 1fr) 400px; gap: var(--spacing-xl); }
+}
+/* Linha superior: usa flex para o card de sugestão preencher toda a largura
+   quando o card "Continuar de onde parei" está oculto (sem progresso). */
+.dash-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+.dash-row-top > * { flex: 1 1 280px; min-width: 0; }
+
+/* Linha inferior: Certificados + Comunidade sempre lado a lado no desktop. */
+.dash-row-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+@media (min-width: 700px) {
+  .dash-row-bottom { grid-template-columns: 1fr 1fr; }
+}
+.suggestion-card, .continue-card, .info-card, .performance-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+.suggestion-card { display: flex; gap: var(--spacing-md); align-items: center; min-height: auto; }
+.suggestion-icon { font-size: 2rem; }
+.suggestion-label {
+  font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--color-text-muted); font-weight: 700; margin-bottom: 4px;
+}
+.suggestion-text p { font-size: 0.9rem; margin-bottom: var(--spacing-sm); }
+
+.continue-card .course-label {
+  font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--color-primary); font-weight: 700;
+}
+.continue-card h3 { font-size: 1rem; margin: 4px 0 8px; }
+
+/* Coluna principal do dashboard: espaçamento vertical uniforme entre blocos */
+.dash-col-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+.quick-access { margin-top: 0; }
+.quick-access-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  align-items: stretch;
+}
+@media (max-width: 640px) {
+  .quick-access-row { grid-template-columns: 1fr; }
+}
+/* Card de disciplina (Home) — branco, ícone colorido à esquerda, borda lateral colorida */
+.qa-item {
+  display: flex; align-items: center;
+  gap: var(--spacing-md); padding: var(--spacing-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-border);
+  border-radius: var(--radius-md); cursor: pointer;
+  font-family: var(--font-ui); color: var(--color-text);
+  text-align: left;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.qa-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.qa-icon {
+  font-size: 1.5rem; width: 46px; height: 46px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.qa-texts { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.qa-name { font-size: 0.9rem; font-weight: 700; color: var(--color-text); }
+.qa-sub  { font-size: 0.75rem; color: var(--color-text-muted); }
+.link-more {
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--color-primary); font-weight: 700; font-size: 0.85rem;
+}
+.home-section-title {
+  font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--color-text-muted); font-weight: 700;
+}
+
+.info-card h3 { font-size: 1rem; margin-bottom: 8px; }
+.info-card p { font-size: 0.88rem; margin-bottom: var(--spacing-sm); }
+
+.performance-card h3 { font-size: 1rem; margin-bottom: var(--spacing-md); }
+.perf-avg { font-size: 0.88rem; margin-bottom: 6px; }
+.perf-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.78rem; margin-bottom: 6px; color: var(--color-text-secondary);
+}
+.locked-area { text-align: center; padding: var(--spacing-md) 0; }
+.lock-icon { font-size: 2rem; margin-bottom: 6px; }
+
+/* =============================================
+   TELAS DE TEXTO (Privacidade / Quem somos / Ajuda)
+   ============================================= */
+.text-page {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+.text-page h1 { margin-bottom: var(--spacing-md); }
+.text-page p { margin-bottom: var(--spacing-md); }
+.faq-subtitle {
+  margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md);
+  color: var(--color-primary); font-size: 1.15rem;
+}
+.faq-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.faq-list details {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+.faq-list summary { cursor: pointer; font-weight: 700; color: var(--color-text); padding: 6px 0; }
+.faq-list p { margin-top: 8px; }
+
+/* =============================================
+   ATIVIDADES — Estado bloqueado
+   ============================================= */
+.activity-item.locked {
+  opacity: 0.6; cursor: not-allowed;
+}
+.activity-item.locked:hover { transform: none; }
+
+/* =============================================
+   QUIZ
+   ============================================= */
+/* Trilha de navegação (breadcrumb) */
+.quiz-breadcrumb {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+}
+.quiz-breadcrumb a { color: var(--color-text-muted); cursor: pointer; }
+.quiz-breadcrumb a:hover { color: var(--color-accent); }
+.quiz-breadcrumb strong { color: var(--color-text); font-weight: 700; }
+
+/* Cabeçalho: título à esquerda, progresso à direita */
+.quiz-header { margin-bottom: var(--spacing-lg); }
+.quiz-header-row {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--spacing-lg); flex-wrap: wrap;
+}
+.quiz-header h1 { font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 4px; }
+.quiz-subject { font-size: 0.9rem; color: var(--color-primary); font-weight: 600; }
+.quiz-topbar { min-width: 180px; flex: 0 0 auto; padding-top: 6px; }
+.quiz-topbar .progress-bar-wrap { height: 6px; margin: 0 0 6px; }
+.quiz-progress-label {
+  font-size: 0.78rem; color: var(--color-text-muted);
+  font-weight: 600; text-align: right;
+}
+
+.quiz-grid {
+  display: grid; grid-template-columns: 1fr; gap: var(--spacing-lg);
+  align-items: start;
+}
+@media (min-width: 800px) {
+  .quiz-grid { grid-template-columns: 1fr 280px; }
+}
+.quiz-question-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+.quiz-q-meta {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  font-size: 0.85rem; color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+.quiz-q-badge {
+  background: var(--color-primary); color: #fff;
+  padding: 4px 12px; border-radius: var(--radius-full);
+  font-size: 0.8rem; font-weight: 700;
+}
+.quiz-statement {
+  font-size: 1rem; color: var(--color-text);
+  line-height: 1.7; margin-bottom: var(--spacing-lg);
+}
+.quiz-options { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); cursor: pointer;
+  background: var(--color-surface);
+  transition: border-color var(--transition), background var(--transition);
+}
+.quiz-opt:hover { border-color: var(--color-primary); }
+.quiz-opt.selected { border-color: var(--color-primary); background: rgba(124,58,237,0.06); }
+.quiz-opt input { accent-color: var(--color-primary); margin-top: 3px; }
+.quiz-opt-body { display: flex; flex-direction: column; gap: 3px; }
+.quiz-opt-label { font-size: 0.78rem; font-weight: 700; color: var(--color-primary); }
+.quiz-opt-text { font-size: 0.92rem; color: var(--color-text); }
+
+/* Mapa do Quiz (sidebar) */
+.quiz-side { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.quiz-map-card { padding: var(--spacing-md); }
+.quiz-map-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem; font-weight: 800; color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+.quiz-map-grid {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+.quiz-map-btn {
+  width: 42px; height: 42px; border-radius: var(--radius-md);
+  border: 1px solid var(--color-border); background: var(--color-surface-2);
+  font-family: var(--font-ui); font-weight: 700; font-size: 0.95rem;
+  color: var(--color-text-secondary); cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.quiz-map-btn:hover { border-color: var(--color-primary); }
+.quiz-map-btn.answered { background: var(--color-primary-pale); color: var(--color-accent); border-color: var(--color-primary-light); }
+.quiz-map-btn.current { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.quiz-nav-row {
+  display: flex; gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+/* Botões cabem dentro do card (sem estourar a borda) */
+.quiz-nav-row .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 8px 8px;
+  font-size: 0.74rem;
+  gap: 4px;
+}
+.quiz-timer-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+.quiz-side-label { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600; }
+.quiz-side-value { font-weight: 700; color: var(--color-text); }
+.quiz-side-value.timer { color: var(--color-primary); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+
+/* Botão Finalizar (vermelho suave, como no protótipo) */
+.btn-finish {
+  background: #fee2e2; color: #dc2626;
+}
+.btn-finish:hover { background: #fecaca; color: #b91c1c; }
+
+/* Botão danger compatibilidade */
+.btn-danger {
+  background: #dc2626; color: #fff; border: 0;
+}
+.btn-danger:hover { background: #b91c1c; }
+
+/* =============================================
+   LOGOS EM IMAGEM (EducaTech)
+   Para trocar a marca, substitua o arquivo:
+   public/app/assets/educatech-logo.png
+   ============================================= */
+.splash-logo-img {
+  width: 220px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  filter: drop-shadow(0 8px 30px rgba(124, 58, 237, 0.45));
+}
+.auth-logo-img {
+  width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.auth-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.gn-logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+.cert-logo-img {
+  height: 70px;
+  width: auto;
+  margin: 0 auto;
+}
+.cert-logo { display: flex; justify-content: center; }
