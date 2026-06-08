@@ -430,8 +430,8 @@
             <span class="menu-icon">📚</span> Gerenciar Cursos
             <span class="menu-arrow">›</span>
           </button>
-          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
-            <span class="menu-icon">👥</span> Alunos e Instituição
+          <button class="profile-menu-item" onclick="openUserList()">
+            <span class="menu-icon">👥</span> Lista de Alunos
             <span class="menu-arrow">›</span>
           </button>
           <button class="profile-menu-item" onclick="showPanel('panel-calendario')">
@@ -451,8 +451,8 @@
             <span class="menu-icon">📚</span> Gerenciar Cursos
             <span class="menu-arrow">›</span>
           </button>
-          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
-            <span class="menu-icon">👥</span> Alunos e Instituição
+          <button class="profile-menu-item" onclick="openUserList()">
+            <span class="menu-icon">👥</span> Professores e Alunos
             <span class="menu-arrow">›</span>
           </button>
           <button class="profile-menu-item" onclick="showPanel('panel-avisos-admin')">
@@ -476,7 +476,7 @@
             <span class="menu-icon">⚙️</span> Gerenciar Cursos
             <span class="menu-arrow">›</span>
           </button>
-          <button class="profile-menu-item" onclick="showPanel('panel-alunos-inst')">
+          <button class="profile-menu-item" onclick="openUserList()">
             <span class="menu-icon">👥</span> Usuários
             <span class="menu-arrow">›</span>
           </button>
@@ -683,114 +683,33 @@
         </button>
       </section>
 
-      <!-- PAINEL: Alunos e Instituição -->
-      <section id="panel-alunos-inst" class="profile-panel" aria-label="Alunos e Instituição">
+      <!-- PAINEL: Lista de Usuários (gerado dinamicamente conforme o nível de acesso)
+           Professor   → apenas alunos
+           Coordenador → professores e alunos
+           Administrador → todos os usuários cadastrados
+           Ao clicar em um aluno, abre o editor de notas. -->
+      <section id="panel-alunos-inst" class="profile-panel" aria-label="Lista de usuários">
         <div class="panel-header">
           <button class="back-btn" onclick="hidePanel('panel-alunos-inst')" aria-label="Voltar">← Voltar</button>
-          <h2 style="font-size:1.1rem;">Alunos e Instituição</h2>
+          <h2 style="font-size:1.1rem;" id="user-list-title">Usuários</h2>
         </div>
 
-        <!-- Tabs: Alunos / Instituição -->
-        <div class="tabs" role="tablist">
-          <button class="tab-btn active" role="tab" aria-selected="true"
-                  onclick="switchTab('tab-alunos', this)">Alunos</button>
-          <button class="tab-btn" role="tab" aria-selected="false"
-                  id="tab-inst-btn"
-                  onclick="switchTab('tab-inst', this)">Instituição</button>
-        </div>
+        <p class="screen-subtitle" id="user-list-hint" style="margin-top:0;"></p>
 
-        <!-- Tab: Lista de alunos -->
-        <div id="tab-alunos" class="tab-panel active" role="tabpanel">
-          <div class="card">
-            <table class="data-table" aria-label="Lista de alunos">
-              <thead>
-                <tr>
-                  <th scope="col">Matrícula</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Curso</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Dados de exemplo; substituir por consulta SQL -->
-                <tr>
-                  <td>ALN-001</td>
-                  <td>Hugo Souza</td>
-                  <td><span class="chip">ALN</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-secondary"
-                            onclick="showToast('Abrindo perfil: Hugo Souza')">
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>CC-001</td>
-                  <td>João Santos</td>
-                  <td><span class="chip">CC</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-secondary"
-                            onclick="showToast('Abrindo perfil: João Santos')">
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>ADM-001</td>
-                  <td>Bruno Santos</td>
-                  <td><span class="chip">Adm.</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-secondary"
-                            onclick="showToast('Abrindo perfil: Bruno Santos')">
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="card">
+          <table class="data-table" aria-label="Lista de usuários cadastrados">
+            <thead>
+              <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <!-- As linhas são geradas via JS (renderUserList) a partir do "banco" usersDB -->
+            <tbody id="user-list-body"></tbody>
+          </table>
         </div>
-
-        <!-- Tab: Membros da instituição -->
-        <div id="tab-inst" class="tab-panel" role="tabpanel">
-          <div class="card">
-            <table class="data-table" aria-label="Membros da instituição">
-              <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Cargo</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>PROF-001</td>
-                  <td>Prof. Carlos Mendes</td>
-                  <td><span class="chip" style="background:#e0f2fe; border-color:#7dd3fc; color:#0c4a6e;">Professor</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-secondary"
-                            onclick="showToast('Abrindo perfil: Prof. Carlos Mendes')">
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>COORD-001</td>
-                  <td>Coord. Lúcia Ferreira</td>
-                  <td><span class="chip" style="background:#fef3c7; border-color:#fcd34d; color:#78350f;">Coordenadora</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-secondary"
-                            onclick="showToast('Abrindo perfil: Coord. Lúcia Ferreira')">
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
       </section>
 
     </div><!-- /container -->
@@ -1251,6 +1170,66 @@
     </div>
   </div>
 
+  <!-- ================================================
+       MODAL: EDITAR NOTAS DO ALUNO
+       Aberto por professor/coordenador/administrador ao
+       clicar em um aluno na lista de usuários.
+       ================================================ -->
+  <div id="modal-grades" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="grade-modal-title">
+    <div class="modal modal-scroll">
+      <div class="modal-header">
+        <h3 id="grade-modal-title">📝 Alterar Notas</h3>
+        <button class="modal-close" onclick="closeModal('modal-grades')" aria-label="Fechar modal">✕</button>
+      </div>
+      <p class="grade-modal-sub" id="grade-modal-student">—</p>
+      <!-- Campos de nota (0 a 10) por disciplina, gerados via JS -->
+      <div id="grade-editor-fields"></div>
+      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+        <button class="btn btn-secondary" onclick="closeModal('modal-grades')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveGrades()">💾 Salvar Notas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================
+       MODAL: CONTEÚDO DE ATIVIDADE (leitura / exercícios)
+       Usado pela Atividade 1 (introdução) e Atividade 2
+       (lista de exercícios com gabarito) de ADS.
+       ================================================ -->
+  <div id="modal-conteudo" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="conteudo-title">
+    <div class="modal modal-scroll">
+      <div class="modal-header">
+        <h3 id="conteudo-title">Atividade</h3>
+        <button class="modal-close" onclick="closeModal('modal-conteudo')" aria-label="Fechar modal">✕</button>
+      </div>
+      <div id="conteudo-body" class="conteudo-body"></div>
+      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+        <button class="btn btn-secondary" onclick="closeModal('modal-conteudo')">Fechar</button>
+        <button class="btn btn-primary" onclick="finishContentActivity()">✓ Concluir Atividade</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================
+       MODAL: GERENCIAR ATIVIDADES DA DISCIPLINA
+       Aberto por professor/coordenador/administrador no
+       painel "Gerenciar Cursos". Permite editar, adicionar
+       e excluir atividades de cada unidade.
+       ================================================ -->
+  <div id="modal-manage-activities" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="manage-act-title">
+    <div class="modal modal-scroll">
+      <div class="modal-header">
+        <h3 id="manage-act-title">Gerenciar Atividades</h3>
+        <button class="modal-close" onclick="closeModal('modal-manage-activities')" aria-label="Fechar modal">✕</button>
+      </div>
+      <!-- Lista editável de unidades e atividades, gerada via JS -->
+      <div id="manage-activities-body"></div>
+      <div class="flex gap-sm" style="justify-content:flex-end; margin-top:var(--spacing-md);">
+        <button class="btn btn-primary" onclick="closeModal('modal-manage-activities')">✓ Concluído</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Barra de navegação inferior removida: a navegação é feita pela barra
        superior (☰ menu, setas, logo e cartão do usuário), conforme o protótipo. -->
 
@@ -1286,7 +1265,7 @@
         // Disciplinas atribuídas pelo coordenador/admin.
         // Vazio = professor sem disciplinas (verá "Nenhuma disciplina disponível").
         // Para atribuir, adicione os IDs: ex.: ['ads', 'cc']
-        disciplinasAtribuidas: []
+        disciplinasAtribuidas: ['ads', 'cc']
       },
       {
         id: 3, tipo: 'coordenador', email: 'coord@edu.com', senha: '123456',
@@ -1695,10 +1674,10 @@
         const c = courses.find(x => x.id === id);
         if (!c) return '';
         return `
-          <div class="admin-card" onclick="showToast('Abrir gestão: ${c.name}')">
+          <div class="admin-card" onclick="openManageActivities('${c.id}')">
             <div class="admin-icon">${c.icon}</div>
             <h4>${c.name}</h4>
-            <p>25 aulas</p>
+            <p>Gerenciar atividades ›</p>
           </div>
         `;
       }).join('');
@@ -2358,8 +2337,14 @@
         startQuiz();
         return;
       }
+      // Atividades com conteúdo de leitura/exercícios (ex.: ADS U1 A1 e A2)
+      const contentKey = `${courseId}-${unitIdx}-${actIdx}`;
+      if (activityContent[contentKey]) {
+        openContentActivity(contentKey);
+        return;
+      }
       // Demais atividades: marca como concluída automaticamente (demo)
-      completedActivities[`${courseId}-${unitIdx}-${actIdx}`] = true;
+      completedActivities[contentKey] = true;
       showToast(`Atividade ${actIdx + 1} concluída!`);
       renderActivities(courseId);
     }
@@ -2602,10 +2587,287 @@
     function openModal(id) { document.getElementById(id).classList.add('active'); }
 
     /* ============================================
+       LISTA DE USUÁRIOS (controle de acesso)
+       Professor    → apenas alunos
+       Coordenador  → professores e alunos
+       Administrador → todos os usuários cadastrados
+       ============================================ */
+
+    /* Rótulo amigável do tipo de usuário */
+    function roleLabel(tipo) {
+      return ({
+        aluno: 'Aluno', professor: 'Professor',
+        coordenador: 'Coordenador', administrador: 'Administrador'
+      })[tipo] || tipo;
+    }
+
+    /* Cor do "chip" conforme o tipo (apenas estética) */
+    function roleChipStyle(tipo) {
+      return ({
+        aluno:         'background:#ede9fe; border-color:#c4b5fd; color:#5b21b6;',
+        professor:     'background:#e0f2fe; border-color:#7dd3fc; color:#0c4a6e;',
+        coordenador:   'background:#fef3c7; border-color:#fcd34d; color:#78350f;',
+        administrador: 'background:#fee2e2; border-color:#fca5a5; color:#991b1b;'
+      })[tipo] || '';
+    }
+
+    /* Abre o painel de lista de usuários (renderiza antes de exibir) */
+    function openUserList() {
+      renderUserList();
+      showPanel('panel-alunos-inst');
+    }
+
+    /* Renderiza a lista filtrada conforme o nível de acesso do usuário logado */
+    function renderUserList() {
+      if (!currentUser) return;
+      const tipo = currentUser.tipo;
+
+      /* Define quais tipos cada nível de acesso pode visualizar */
+      let allowed, title, hint;
+      if (tipo === 'professor') {
+        allowed = ['aluno'];
+        title = 'Lista de Alunos';
+        hint = 'Você visualiza os alunos cadastrados. Clique em um aluno para alterar suas notas.';
+      } else if (tipo === 'coordenador') {
+        allowed = ['aluno', 'professor'];
+        title = 'Professores e Alunos';
+        hint = 'Você visualiza professores e alunos. Clique em um aluno para alterar suas notas.';
+      } else if (tipo === 'administrador') {
+        allowed = ['aluno', 'professor', 'coordenador', 'administrador'];
+        title = 'Usuários do Sistema';
+        hint = 'Lista completa de usuários cadastrados. Clique em um aluno para alterar suas notas.';
+      } else {
+        allowed = [];
+        title = 'Usuários';
+        hint = '';
+      }
+
+      document.getElementById('user-list-title').textContent = title;
+      document.getElementById('user-list-hint').textContent = hint;
+
+      const rows = usersDB.filter(u => allowed.includes(u.tipo));
+      const body = document.getElementById('user-list-body');
+      body.innerHTML = rows.map(u => {
+        /* Apenas alunos abrem o editor de notas; demais usuários só visualizam */
+        const acao = u.tipo === 'aluno'
+          ? `<button class="btn btn-sm btn-primary" onclick="openGradeEditor(${u.id})">Ver / Notas</button>`
+          : `<button class="btn btn-sm btn-secondary" onclick="showToast('Perfil de ${u.nome}')">Ver</button>`;
+        return `
+          <tr>
+            <td>${u.matricula || '—'}</td>
+            <td>${u.nome}</td>
+            <td><span class="chip" style="${roleChipStyle(u.tipo)}">${roleLabel(u.tipo)}</span></td>
+            <td>${acao}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    /* ============================================
+       EDITAR NOTAS DO ALUNO (modal)
+       Disponível para professor, coordenador e administrador.
+       ============================================ */
+    let gradeEditUserId = null;
+
+    function openGradeEditor(userId) {
+      const u = usersDB.find(x => x.id === userId);
+      if (!u) return;
+      gradeEditUserId = userId;
+      /* Garante que o aluno tenha o objeto de notas inicializado */
+      u.notas = u.notas || { ads: 0, cc: 0, design: 0, ti: 0, ec: 0 };
+
+      document.getElementById('grade-modal-student').textContent =
+        `${u.nome} · ${u.matricula || ''}`;
+
+      /* Um campo numérico (0–10) por disciplina */
+      document.getElementById('grade-editor-fields').innerHTML = courses.map(c => `
+        <div class="form-group">
+          <label for="grade-${c.id}">${c.icon} ${c.name}</label>
+          <input type="number" min="0" max="10" step="0.1" class="form-control"
+                 id="grade-${c.id}" value="${u.notas[c.id] || 0}" />
+        </div>
+      `).join('');
+
+      openModal('modal-grades');
+    }
+
+    function saveGrades() {
+      const u = usersDB.find(x => x.id === gradeEditUserId);
+      if (!u) return;
+      u.notas = u.notas || {};
+      courses.forEach(c => {
+        let v = parseFloat(document.getElementById('grade-' + c.id).value);
+        if (isNaN(v)) v = 0;
+        v = Math.max(0, Math.min(10, v));   /* limita entre 0 e 10 */
+        u.notas[c.id] = v;
+      });
+      closeModal('modal-grades');
+      showToast(`Notas de ${u.nome.split(' ')[0]} atualizadas! ✅`);
+      /* Se o aluno editado estiver logado, atualiza seu relatório imediatamente */
+      if (currentUser && currentUser.id === u.id) renderRelatorio();
+    }
+
+    /* ============================================
+       CONTEÚDO DE ATIVIDADE (leitura / exercícios)
+       Atividade 1 (introdução) e Atividade 2 (exercícios
+       com gabarito) da Unidade 1 de Análise de Sistemas.
+       ============================================ */
+    const activityContent = {
+      /* ADS · Unidade 1 · Atividade 1 — texto introdutório curto */
+      'ads-0-0': {
+        title: 'Atividade 1: Introdução',
+        html: `
+          <h4>Bem-vindo(a) à Análise e Desenvolvimento de Sistemas!</h4>
+          <p>A <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> é a área da
+          tecnologia responsável por planejar, projetar, construir e manter os sistemas de
+          software que resolvem problemas do mundo real — de um aplicativo de banco a um
+          sistema de gestão escolar.</p>
+          <p>Ao longo desta disciplina você vai conhecer o <strong>ciclo de vida do
+          desenvolvimento de software</strong>: desde o levantamento de requisitos junto ao
+          cliente, passando pela modelagem e codificação, até os testes e a manutenção.
+          Também estudaremos os fundamentos da <strong>lógica de programação</strong>, da
+          <strong>orientação a objetos</strong> e da <strong>modelagem com UML</strong>.</p>
+          <p>O objetivo é formar profissionais capazes de transformar necessidades em
+          soluções tecnológicas eficientes, seguras e de fácil manutenção. Bons estudos! 🚀</p>
+        `
+      },
+      /* ADS · Unidade 1 · Atividade 2 — 3 exercícios com gabarito (modo leitura) */
+      'ads-0-1': {
+        title: 'Atividade 2: Exercícios Práticos',
+        html: `
+          <p>Leia cada questão, analise as alternativas e confira o gabarito logo abaixo.</p>
+
+          <div class="questao">
+            <p class="questao-enunciado"><strong>1.</strong> Qual fase do ciclo de vida de
+            desenvolvimento de software tem como objetivo principal entender e documentar
+            o que o sistema deve fazer?</p>
+            <p class="alt">A) Implementação (codificação)</p>
+            <p class="alt">B) Levantamento de requisitos</p>
+            <p class="alt">C) Manutenção</p>
+            <p class="gabarito">Gabarito: B (Levantamento de requisitos)</p>
+          </div>
+
+          <div class="questao">
+            <p class="questao-enunciado"><strong>2.</strong> Na programação orientada a
+            objetos, o mecanismo que permite que uma classe reutilize os atributos e métodos
+            de outra classe é chamado de:</p>
+            <p class="alt">A) Herança</p>
+            <p class="alt">B) Compilação</p>
+            <p class="alt">C) Depuração</p>
+            <p class="gabarito">Gabarito: A (Herança)</p>
+          </div>
+
+          <div class="questao">
+            <p class="questao-enunciado"><strong>3.</strong> Qual diagrama da UML é utilizado
+            para representar os atores e as funcionalidades (casos de uso) de um sistema?</p>
+            <p class="alt">A) Diagrama de classes</p>
+            <p class="alt">B) Diagrama de caso de uso</p>
+            <p class="alt">C) Diagrama de implantação</p>
+            <p class="gabarito">Gabarito: B (Diagrama de caso de uso)</p>
+          </div>
+        `
+      }
+    };
+
+    let contentActivityKey = null;
+
+    function openContentActivity(key) {
+      const data = activityContent[key];
+      if (!data) return;
+      contentActivityKey = key;
+      document.getElementById('conteudo-title').textContent = data.title;
+      document.getElementById('conteudo-body').innerHTML = data.html;
+      openModal('modal-conteudo');
+    }
+
+    /* Marca a atividade de conteúdo como concluída e desbloqueia a próxima */
+    function finishContentActivity() {
+      if (contentActivityKey) {
+        completedActivities[contentActivityKey] = true;
+        const courseId = contentActivityKey.split('-')[0];
+        renderActivities(courseId);
+      }
+      closeModal('modal-conteudo');
+      showToast('Atividade concluída! ✅');
+    }
+
+    /* ============================================
+       GERENCIAR ATIVIDADES (professor/coordenador/admin)
+       Editar o conteúdo (nome) das atividades, adicionar
+       novas e excluir, por unidade da disciplina.
+       ============================================ */
+    let manageCourseId = null;
+
+    function openManageActivities(courseId) {
+      manageCourseId = courseId;
+      /* Garante que a disciplina tenha uma estrutura editável persistente */
+      if (!activitiesByCourse[courseId]) {
+        activitiesByCourse[courseId] = defaultActivities();
+      }
+      const course = courses.find(c => c.id === courseId);
+      document.getElementById('manage-act-title').textContent =
+        'Gerenciar: ' + (course ? course.name : courseId);
+      renderManageActivities();
+      openModal('modal-manage-activities');
+    }
+
+    function renderManageActivities() {
+      const box = document.getElementById('manage-activities-body');
+      const unidades = activitiesByCourse[manageCourseId] || [];
+      box.innerHTML = unidades.map((u, i) => `
+        <div class="manage-unit">
+          <p class="manage-unit-title">Unidade ${i + 1} · ${u.titulo}</p>
+          ${u.atividades.map((a, j) => `
+            <div class="manage-act-row">
+              <input class="form-control" value="${a.replace(/"/g, '&quot;')}"
+                     onchange="editActivityName(${i}, ${j}, this.value)"
+                     aria-label="Nome da atividade ${j + 1}" />
+              <button class="manage-act-del" onclick="deleteActivity(${i}, ${j})"
+                      aria-label="Excluir atividade" title="Excluir">🗑</button>
+            </div>
+          `).join('')}
+          <button class="btn btn-sm btn-secondary" onclick="addActivity(${i})"
+                  style="margin-top:6px;">+ Adicionar atividade</button>
+        </div>
+      `).join('');
+    }
+
+    /* Edita o nome (conteúdo) de uma atividade */
+    function editActivityName(unitIdx, actIdx, value) {
+      const u = activitiesByCourse[manageCourseId][unitIdx];
+      if (u) u.atividades[actIdx] = value.trim() || u.atividades[actIdx];
+    }
+
+    /* Adiciona uma nova atividade à unidade */
+    function addActivity(unitIdx) {
+      const u = activitiesByCourse[manageCourseId][unitIdx];
+      if (!u) return;
+      u.atividades.push(`Atividade ${u.atividades.length + 1}: Nova atividade`);
+      renderManageActivities();
+      showToast('Atividade adicionada.');
+    }
+
+    /* Exclui uma atividade da unidade */
+    function deleteActivity(unitIdx, actIdx) {
+      const u = activitiesByCourse[manageCourseId][unitIdx];
+      if (!u) return;
+      u.atividades.splice(actIdx, 1);
+      /* Remove o registro de conclusão para manter a consistência */
+      delete completedActivities[`${manageCourseId}-${unitIdx}-${actIdx}`];
+      renderManageActivities();
+      showToast('Atividade excluída.');
+    }
+
+    /* ============================================
        INICIALIZAÇÃO
        Executado ao carregar a página
        ============================================ */
     (function init() {
+      /* Semeia a estrutura de atividades para que edições do gestor
+         (adicionar/excluir/editar) sejam persistentes em memória. */
+      courses.forEach(c => {
+        if (!activitiesByCourse[c.id]) activitiesByCourse[c.id] = defaultActivities();
+      });
+
       /* Renderiza barra de navegação global em todas as telas */
       renderGlobalNav();
       /* Exibir a tela inicial com conteúdo padrão */
