@@ -1,165 +1,99 @@
-# EDUCA TECH - SAAI 
+# EducaTech SAAI — PIM IV
 
-( SISTEMA DE AVALIAÇAO E APRENDIZADO INTEGRADO )
+Sistema de Avaliação e Aprendizado Integrado da empresa fictícia EducaTech Solutions, em continuidade ao PIM III de ADS/UNIP. O protótipo foi evoluído para uma aplicação com API .NET, PostgreSQL, Web e aplicativo Mobile.
 
-Plataforma web de avaliação e apoio à aprendizagem desenvolvida como projeto acadêmico para o **PIM III - Projeto Integrado Multidisciplinar** do curso de **Análise e Desenvolvimento de Sistemas - UNIP**.
+## O que está implementado
 
-A  EDUCA TECH - SAAI foi criada como uma solução digital voltada ao aprendizado em tecnologia, reunindo cursos, avaliações, desempenho e organização acadêmica em um único ambiente.
+- Backend C#/.NET 8 em Domain, Application, Infrastructure e API, com orientação a objetos e injeção de dependência.
+- PostgreSQL 16+: modelo normalizado, MER/lógico/físico, procedures transacionais, triggers de integridade/auditoria, índices e histórico protegido.
+- JWT, rotação de refresh token, hash de senha, quatro perfis (Aluno, Professor, Coordenador, Administrador) e revogação de acesso.
+- Web responsivo com identidade visual recuperada do original, perfil e dados pessoais, disciplinas, matrículas, atividades sequenciais, avaliações cronometradas, notas/frequência, certificados, calendário e avisos.
+- Gestão de conteúdo/usuários, atribuição de professores, edição/arquivamento de atividades e relatórios CSV, com permissões por disciplina.
+- Mobile React Native/Expo com sessão no SecureStore, cache por usuário e fila persistente de conclusões com sincronização idempotente.
+- OpenAPI/Swagger, testes com PostgreSQL real e navegador, Docker/Compose, CI e plano de nuvem/DevOps.
 
----
+## Executar rapidamente nesta máquina
 
-## 1. Sobre o Projeto
+Pré-requisitos: SDK .NET 8 e Node.js 24. Este caminho usa PostgreSQL local ao projeto, sem exigir Docker ou instalar serviço de banco no Windows.
 
-A proposta da EDUCA TECH - SAAI é oferecer uma experiência moderna de ensino digital, permitindo que estudantes acompanhem sua evolução e desenvolvam novas competências por meio de atividades práticas e conteúdos selecionados.
-
-O sistema foi pensado para unir aprendizado, desempenho e usabilidade em uma plataforma intuitiva e funcional.
-
----
-
-## 2. Objetivos da Plataforma
-
-- Centralizar cursos e conteúdos educacionais em um único ambiente
-- Aplicar avaliações e atividades online
-- Acompanhar desempenho dos usuários
-- Incentivar evolução contínua nos estudos
-- Utilizar dados como apoio à tomada de decisão
-- Entregar uma navegação simples e acessível
-
----
-
-## 3. Recursos Principais
-
-### Ambiente de Aprendizagem
-
-- Catálogo de cursos
-- Disciplinas organizadas por área
-- Acesso rápido a conteúdos
-- Histórico de progresso
-
-### Sistema de Avaliações
-
-- Atividades interativas
-- Navegação entre questões
-- Envio de atividades concluídas
-- Registro de resultados
-
-### Dashboard do Usuário
-
-- Indicadores de progresso
-- Desempenho acadêmico
-- Histórico de atividades
-- Evolução contínua
-
-### Engajamento
-
-- Barras de progresso
-- Medalhas e conquistas
-- Níveis de evolução
-- Incentivo à constância nos estudos
-
----
-
-## 4. Tecnologias Utilizadas
-
-### Front-end
-
-- HTML
-- CSS
-- JavaScript
-
-### Back-end
-
-- C#
-
-### Banco de Dados
-
-- SQL
-
-### Design e Prototipação
-
-- Figma
-- Stitch 
-
----
-
-## 5. Organização do Desenvolvimento
-
-### Gestão de Projeto
-
-- GitHub Issues para distribuição de tarefas
-- GitHub Projects em Kanban como metodologia
-- Sprints para organização das entregas
-
-### Fluxo de Trabalho
-
-```
-A fazer → Em andamento → Revisão → Finalizado
+```powershell
+npm.cmd --prefix tooling ci
+npm.cmd --prefix tooling run dev
 ```
 
----
+Acesse **http://localhost:5080**. A conta administrativa inicial e as configurações locais ficam em `.local/development.json`, ignorado pelo Git. Use essa conta para promover usuários cadastrados aos perfis de professor/coordenador. Alunos podem criar a própria conta na tela de acesso. Não existe uma senha fixa versionada.
 
-## 6. Divisão de Responsabilidades
+O comando mantém o banco em `.local/development-db`; encerre com Ctrl+C. Para evitar portas ocupadas, configure `DEV_DB_PORT` (padrão 55433) ou `DEV_API_PORT` (5080). Esse atalho é exclusivo para desenvolvimento. Para PostgreSQL próprio ou Docker, siga o [guia de execução](docs/03-execucao-e-api.md).
 
-### Wesley Souza — Product Owner
+## Documentação técnica
 
-- Levantamento de requisitos
-- Escolha do público-alvo
-- Organização do backlog do produto
+| Guia                                                             | Conteúdo                                                                       |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [Arquitetura](docs/01-arquitetura.md)                            | Camadas, diagramas, POO, fluxos, autenticação e limites                        |
+| [Banco de dados](docs/02-banco-de-dados.md)                      | MER, lógico, físico, normalização, procedures, triggers e instalação           |
+| [Execução e API](docs/03-execucao-e-api.md)                      | Configuração, endpoints, exemplos e testes                                     |
+| [Mobile](docs/04-mobile.md)                                      | Telas, navegação, sessão, cache, sincronização e execução                      |
+| [Infraestrutura](docs/05-infraestrutura.md)                      | Containers, CI/CD, nuvem, monitoramento, backup e escala                       |
+| [Rastreabilidade ao manual](docs/06-rastreabilidade-pim.md)      | Nove etapas, divergências, inclusão, backlogs, sprints e pendências acadêmicas |
+| [Referências](docs/07-referencias.md)                            | Documentos do projeto e fontes técnicas oficiais                               |
+| [Auditoria do original](docs/08-auditoria-interface-original.md) | Comparação com o GitHub, recursos restaurados e diferenças justificadas        |
 
-### Erick Jonathan — Scrum Master
+## Estrutura
 
-- Criação de tabelas
-- Organização de relacionamentos
-- Modelagem de classes
-
-### Victor Hugo — Desenvolvedor 01
-
-- Relatórios e diagramas
-- Análise de dados recebidos
-- Documentação final
-
-### Bruno Santos — Desenvolvedor 02
-
-- Modelagem das telas
-- Layout responsivo multiplataforma
-- Prototipagem interativa
-
----
-
-## 7. Experiência do Usuário
-
-A interface da TechVagas está sendo desenvolvida com foco em clareza e facilidade de uso.
-
-- Navegação intuitiva
-- Layout limpo e organizado
-- Hierarquia visual consistente
-- Componentes reutilizáveis
-- Compatibilidade multiplataforma
-- Responsividade para diferentes dispositivos
-
----
-
-## 8. Status do Projeto
-
-Em desenvolvimento ativo.
-
-Etapas concluídas até o momento:
-
-1. Planejamento inicial
-2. Estrutura funcional do sistema
-3. Organização técnica do repositório
-4. Definição dos módulos principais
-5. Protótipo inicial da plataforma
-
----
-
-## 9. Estrutura do Projeto
-
+```text
+backend/
+  EducaTech.Domain/           # Entidades, validações e políticas
+  EducaTech.Application/      # Casos de uso, DTOs e contratos
+  EducaTech.Infrastructure/   # Npgsql, SQL e segurança
+  EducaTech.Api/              # Controllers, composição e OpenAPI
+  EducaTech.sln               # Solução .NET
+  Directory.Build.props      # Configuração comum dos projetos
+  global.json                # Versão do SDK
+database/                    # DDL, procedures, seed e permissões
+frontend/                    # Web servido pela API
+mobile/                      # Aplicativo React Native / Expo
+infra/
+  docker/                    # Dockerfile, Compose e exemplo de ambiente
+  postgres/                  # Inicialização da conta do banco
+tooling/
+  scripts/                   # Execução e verificações integradas
+  tests/                     # Testes unitários e de navegador
+  config/                    # Configuração do Playwright
+  package.json               # Dependências das ferramentas
+docs/                        # Guias técnicos e rastreabilidade
+.github/workflows/           # Integração contínua no GitHub
+.local/                      # Dados e credenciais somente deste PC (ignorado)
 ```
- EDUCA TECH - SAAI 
-├── frontend/
-├── backend/
-├── documentação/
-├── prototipos/
-└── README.md
+
+Arquivos de convenção do Git (`.gitignore`, `.gitattributes`), `.github` e este README ficam na raiz. Os materiais antigos de estudo, diagramas e protótipos foram removidos; os modelos e diagramas técnicos da implementação continuam nos guias de `docs`.
+
+## Preparar para o GitHub
+
+```powershell
+npm.cmd --prefix tooling run check:repository
+git status --short
 ```
+
+Envie os arquivos pelo Git/GitHub Desktop, respeitando `.gitignore`. `.local`, arquivos `.env`, bancos locais, `node_modules`, builds, bundles e resultados de teste não fazem parte do código a publicar. Os arquivos `.env.example` são modelos sem credenciais. Em outro computador, execute a instalação acima; o ambiente local e suas credenciais serão gerados novamente. Nenhum commit ou push é executado pelos comandos de demonstração.
+
+## Validação
+
+```powershell
+dotnet build backend/EducaTech.sln
+npm.cmd --prefix tooling test
+npm.cmd --prefix tooling run test:web
+Set-Location mobile
+npm ci
+npm run typecheck
+npx expo export --platform android --output-dir dist
+```
+
+O teste integrado provisiona um banco temporário, verifica a API com a conta SQL de runtime e encerra os processos. Em Windows usa Edge instalado; em Linux/CI requer Chromium do Playwright. Consulte o guia para os detalhes. O Mobile requer `EXPO_PUBLIC_API_URL` em `.env`, apontando para uma API alcançável pelo dispositivo. Exportar o bundle não produz APK nem substitui teste em aparelho.
+
+## Decisões e escopo acadêmico
+
+O PIM III previa SQL Server; a implementação adota **PostgreSQL**, permitido pelo pedido atual e pelo manual IV. Os scripts não são compatíveis com T-SQL. O Web usa ASP.NET Core para servir a interface e as APIs; o manual não impõe um framework Mobile.
+
+As nove etapas do manual estão mapeadas na documentação. Nuvem/DevOps têm plano de execução, além dos arquivos locais; nenhuma implantação em conta externa foi feita. Docker/Compose e CI foram preparados, mas não executados neste ambiente sem Docker.
+
+Esta entrega é a base técnica funcional e sua documentação. Não substitui o relatório acadêmico com desenvolvimento de 20–30 páginas, embasamento/citações, dados da equipe e submissão institucional. A auditoria do original descreve a restauração e as pendências: fórum, recuperação de senha por e-mail, dependentes e cancelamento de matrícula.

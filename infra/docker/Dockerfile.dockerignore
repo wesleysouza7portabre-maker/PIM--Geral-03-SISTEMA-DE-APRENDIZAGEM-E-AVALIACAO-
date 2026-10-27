@@ -1,0 +1,12 @@
+.git
+.local
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/.expo
+**/.env
+.env*
+tooling
+docs
+.github
