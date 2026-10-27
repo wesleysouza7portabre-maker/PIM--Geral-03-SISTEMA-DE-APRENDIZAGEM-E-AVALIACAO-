@@ -1,0 +1,45 @@
+name: EducaTech CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: backend/global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: |
+            tooling/package-lock.json
+            mobile/package-lock.json
+      - run: dotnet restore backend/EducaTech.sln
+      - run: dotnet build backend/EducaTech.sln --no-restore
+      - run: npm ci --prefix tooling
+      - run: npm run check:repository --prefix tooling
+      - run: npm test --prefix tooling
+      - run: npx playwright install --with-deps chromium
+        working-directory: tooling
+      - run: npm run test:web --prefix tooling
+      - run: npm ci
+        working-directory: mobile
+      - run: npm run typecheck
+        working-directory: mobile
+      - run: npx expo export --platform android --output-dir dist
+        working-directory: mobile
+        env:
+          EXPO_PUBLIC_API_URL: https://example.invalid/api/v1
+      - run: docker build -f infra/docker/Dockerfile -t educatech:${{ github.sha }} .
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: .local/test-results/
+          include-hidden-files: true

@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "EducaTech SAAI",
+    "slug": "educatech-saai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "br.edu.educatech.saai",
+      "supportsTablet": true
+    },
+    "android": { "package": "br.edu.educatech.saai" },
+    "plugins": [["expo-secure-store", { "configureAndroidBackup": true }]]
+  }
+}
